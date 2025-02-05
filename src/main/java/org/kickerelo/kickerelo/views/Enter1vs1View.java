@@ -1,48 +1,21 @@
-package org.kickerelo.kickerelo;
+package org.kickerelo.kickerelo.views;
 
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
+import org.kickerelo.kickerelo.NoSuchPlayerException;
 import org.kickerelo.kickerelo.service.KickerEloService;
 
-/**
- * A sample Vaadin view class.
- * <p>
- * To implement a Vaadin view just extend any Vaadin component and use @Route
- * annotation to announce it in a URL as a Spring managed bean.
- * <p>
- * A new instance of this class is created for every new user and every browser
- * tab/window.
- * <p>
- * The main view contains a text field for getting the user name and a button
- * that shows a greeting message in a notification.
- */
-@Route
-public class MainView extends VerticalLayout {
+@Route(value = "enter1vs1")
+public class Enter1vs1View extends VerticalLayout {
 
-    /**
-     * Construct a new Vaadin view.
-     */
-
-    public MainView(KickerEloService eloService) {
-
-
-        TextField spielername = new TextField("Spielername");
-        spielername.addClassName("bordered");
-
-        // Button click listeners can be defined as lambda expressions
-        Button button = new Button("Spieler hinzufügen", e -> {
-            eloService.addSpieler(spielername.getValue());
-            Notification.show("Spieler gespeichert").addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-        });
-
-        button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+    public Enter1vs1View(KickerEloService eloService) {
+        H2 subheading = new H2("1 vs 1 Ergebnis");
 
         ComboBox<String> winnerSelect = new ComboBox<>("Gewinner");
         winnerSelect.setItems(eloService.getSpielerNamen());
@@ -73,6 +46,6 @@ public class MainView extends VerticalLayout {
         // styles.css.
         addClassName("centered-content");
 
-        add(spielername, button, winnerSelect, loserSelect, loserGoals, saveButton);
+        add(subheading, winnerSelect, loserSelect, loserGoals, saveButton);
     }
 }

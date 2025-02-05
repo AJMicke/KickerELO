@@ -1,8 +1,11 @@
-package org.kickerelo.kickerelo;
+package org.kickerelo.kickerelo.service;
 
+import org.kickerelo.kickerelo.NoSuchPlayerException;
 import org.kickerelo.kickerelo.data.Ergebnis1vs1;
 import org.kickerelo.kickerelo.data.Ergebnis2vs2;
 import org.kickerelo.kickerelo.data.Spieler;
+import org.kickerelo.kickerelo.model.ResultInfo1vs1;
+import org.kickerelo.kickerelo.model.ResultInfo2vs2;
 import org.kickerelo.kickerelo.repository.Ergebnis1vs1Repository;
 import org.kickerelo.kickerelo.repository.Ergebnis2vs2Repository;
 import org.kickerelo.kickerelo.repository.SpielerRepository;
@@ -19,6 +22,8 @@ public class KickerEloService {
     private Ergebnis2vs2Repository ergebnis2vs2Repository;
     @Autowired
     private SpielerRepository spielerRepository;
+    @Autowired
+    private EloCalculationService eloCalculationService;
 
     public List<String> getSpielerNamen() {
         return spielerRepository.findAll().stream().map(Spieler::getName).toList();
@@ -38,7 +43,13 @@ public class KickerEloService {
 
         ergebnis1vs1Repository.save(ergebnis);
 
-        // Compute the new ELO and update the Spieler entities
+        ResultInfo1vs1 result = new ResultInfo1vs1(gewinner.getElo(), ergebnis.getToreVerlierer(), verlierer.getElo());
+        eloCalculationService.updateElo1vs1(result);
+        gewinner.setElo(result.getNewEloWinner());
+        spielerRepository.save(gewinner);
+        verlierer.setElo(result.getNewEloLoser());
+        spielerRepository.save(verlierer);
+
     }
 
     public void enterResult2vs2(String gewinnerNameVorn, String gewinnerNameHinten,
@@ -61,7 +72,16 @@ public class KickerEloService {
 
         ergebnis2vs2Repository.save(ergebnis);
 
-        // Compute the new ELO, update the Spieler entitities
+        ResultInfo2vs2 result = new ResultInfo2vs2(gewinnerVorn.getElo(), gewinnerHinten.getElo(), verliererVorn.getElo(), verliererHinten.getElo(), toreVerlierer);
+        eloCalculationService.updateElo2vs2(result);
+        gewinnerVorn.setElo(result.getNewEloWinnerFront());
+        spielerRepository.save(gewinnerVorn);
+        gewinnerHinten.setElo(result.getNewEloWinnerBack());
+        spielerRepository.save(gewinnerHinten);
+        verliererVorn.setElo(result.getNewEloLoserFront());
+        spielerRepository.save(verliererVorn);
+        verliererHinten.setElo(result.getNewEloLoserBack());
+        spielerRepository.save(verliererHinten);
     }
 
     public void addSpieler(String name) {
