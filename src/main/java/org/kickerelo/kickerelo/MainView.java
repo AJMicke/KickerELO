@@ -57,8 +57,15 @@ public class MainView extends VerticalLayout {
         loserGoals.setValue(0);
         loserGoals.setStepButtonsVisible(true);
 
-        Button saveButton = new Button("Speichern", e ->
-                eloService.enterResult1vs1(winnerSelect.getValue(), loserSelect.getValue(), loserGoals.getValue().shortValue()));
+        Button saveButton = new Button("Speichern", e -> {
+            try {
+                eloService.enterResult1vs1(winnerSelect.getValue(), loserSelect.getValue(), loserGoals.getValue().shortValue());
+                Notification.show("Gespeichert").addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+            } catch (NoSuchPlayerException err) {
+                Notification.show("Konnte nicht gespeichert werden").addThemeVariants(NotificationVariant.LUMO_ERROR);
+            }
+        });
+
 
 
         // Use custom CSS classes to apply styling. This is defined in

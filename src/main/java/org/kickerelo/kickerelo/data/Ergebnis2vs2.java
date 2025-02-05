@@ -1,35 +1,38 @@
 package org.kickerelo.kickerelo.data;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
 @Entity
 public class Ergebnis2vs2 {
     @Id
-    @Column(name = "ID")
+    @Column(name = "ID", unique = true, nullable = false)
+    @GeneratedValue
     private long id;
 
     @ManyToOne
-    @JoinColumn(name = "GEWINNER_VORN")
+    @JoinColumn(name = "GEWINNER_VORN", nullable = false)
     private Spieler gewinnerVorn;
 
     @ManyToOne
-    @JoinColumn(name = "GEWINNER_HINTEN")
+    @JoinColumn(name = "GEWINNER_HINTEN", nullable = false)
     private Spieler gewinnerHinten;
 
     @ManyToOne
-    @JoinColumn(name = "VERLIERER_VORN")
+    @JoinColumn(name = "VERLIERER_VORN", nullable = false)
     private Spieler verliererVorn;
 
     @ManyToOne
-    @JoinColumn(name = "VERLIERER_HINTEN")
+    @JoinColumn(name = "VERLIERER_HINTEN", nullable = false)
     private Spieler verliererHinten;
 
-    @Column(name = "TORE_VERLIERER")
+    @Column(name = "TORE_VERLIERER", nullable = false)
     private short toreVerlierer;
 
-    @Column(name = "ZEITPUNKT")
+    @Column(name = "ZEITPUNKT", nullable = false, updatable = false)
+    @CreationTimestamp
     private LocalDateTime timestamp;
 
     public Ergebnis2vs2() {

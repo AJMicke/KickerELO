@@ -16,6 +16,9 @@ public class Spieler {
     @Column(name = "ELO", nullable = false)
     private float elo;
 
+    @Column(name = "ELO_ALT")
+    private float elo_alt;
+
     public Spieler() {
     }
 
@@ -41,5 +44,13 @@ public class Spieler {
 
     public void setElo(float elo) {
         this.elo = elo;
+    }
+
+    public float getElo_alt() {
+        return elo_alt;
+    }
+
+    public void setElo_alt(float elo_alt) {
+        this.elo_alt = elo_alt;
     }
 }
