@@ -1,9 +1,11 @@
 package org.kickerelo.kickerelo.service;
 
-import org.kickerelo.kickerelo.NoSuchPlayerException;
+import org.kickerelo.kickerelo.exception.DuplicatePlayerException;
+import org.kickerelo.kickerelo.exception.NoSuchPlayerException;
 import org.kickerelo.kickerelo.data.Ergebnis1vs1;
 import org.kickerelo.kickerelo.data.Ergebnis2vs2;
 import org.kickerelo.kickerelo.data.Spieler;
+import org.kickerelo.kickerelo.exception.PlayerNameNotSetException;
 import org.kickerelo.kickerelo.model.ResultInfo1vs1;
 import org.kickerelo.kickerelo.model.ResultInfo2vs2;
 import org.kickerelo.kickerelo.repository.Ergebnis1vs1Repository;
@@ -31,6 +33,13 @@ public class KickerEloService {
 
     public void enterResult1vs1(String gewinnerName, String verliererName,
                                 short toreVerlierer) {
+        if (gewinnerName == null || verliererName == null) {
+            throw new PlayerNameNotSetException("Alle Namen müssen gesetzt sein");
+        }
+
+        if (gewinnerName.equals(verliererName)) {
+            throw new DuplicatePlayerException("winner and loser identical");
+        }
 
         Spieler gewinner = spielerRepository.findByName(gewinnerName)
                 .orElseThrow(() -> new NoSuchPlayerException(gewinnerName));
@@ -55,6 +64,20 @@ public class KickerEloService {
     public void enterResult2vs2(String gewinnerNameVorn, String gewinnerNameHinten,
                                 String verliererNameVorn, String verliererNameHinten,
                                 short toreVerlierer) {
+
+        if (gewinnerNameVorn == null || gewinnerNameHinten == null
+            || verliererNameVorn == null || verliererNameHinten == null) {
+            throw new PlayerNameNotSetException("Alle Namen müssen gesetzt sein");
+        }
+
+        if (gewinnerNameVorn.equals(gewinnerNameHinten) ||
+            gewinnerNameVorn.equals(verliererNameVorn) ||
+            gewinnerNameVorn.equals(verliererNameHinten) ||
+            gewinnerNameHinten.equals(verliererNameVorn) ||
+            gewinnerNameHinten.equals(verliererNameHinten) ||
+            verliererNameVorn.equals(verliererNameHinten)) {
+            throw new DuplicatePlayerException("players must not be identical");
+        }
 
         Spieler gewinnerVorn = spielerRepository.findByName(gewinnerNameVorn)
                 .orElseThrow(() -> new NoSuchPlayerException(gewinnerNameVorn));

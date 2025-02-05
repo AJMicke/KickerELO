@@ -8,7 +8,9 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.router.Route;
-import org.kickerelo.kickerelo.NoSuchPlayerException;
+import org.kickerelo.kickerelo.exception.DuplicatePlayerException;
+import org.kickerelo.kickerelo.exception.NoSuchPlayerException;
+import org.kickerelo.kickerelo.exception.PlayerNameNotSetException;
 import org.kickerelo.kickerelo.service.KickerEloService;
 
 @Route(value = "enter2vs2")
@@ -43,7 +45,11 @@ public class Enter2vs2View extends VerticalLayout {
                 eloService.enterResult2vs2(winnerFrontSelect.getValue(), winnerBackSelect.getValue(), loserFrontSelect.getValue(), loserBackSelect.getValue(), loserGoals.getValue().shortValue());
                 Notification.show("Gespeichert").addThemeVariants(NotificationVariant.LUMO_SUCCESS);
             } catch (NoSuchPlayerException err) {
-                Notification.show("Konnte nicht gespeichert werden").addThemeVariants(NotificationVariant.LUMO_ERROR);
+                Notification.show("Unbekannter Spieler").addThemeVariants(NotificationVariant.LUMO_ERROR);
+            } catch (DuplicatePlayerException err) {
+                Notification.show("Alle Spieler müssen paarweise verschieden sein").addThemeVariants(NotificationVariant.LUMO_ERROR);
+            } catch (PlayerNameNotSetException err) {
+                Notification.show("Alle Spieler müssen gesetzt sein").addThemeVariants(NotificationVariant.LUMO_ERROR);
             }
         });
 
