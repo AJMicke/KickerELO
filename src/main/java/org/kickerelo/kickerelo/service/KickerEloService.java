@@ -57,11 +57,11 @@ public class KickerEloService {
 
         ergebnis1vs1Repository.save(ergebnis);
 
-        ResultInfo1vs1 result = new ResultInfo1vs1(gewinner.getElo(), ergebnis.getToreVerlierer(), verlierer.getElo());
+        ResultInfo1vs1 result = new ResultInfo1vs1(gewinner.getElo1vs1(), ergebnis.getToreVerlierer(), verlierer.getElo1vs1());
         eloCalculationService.updateElo1vs1(result);
-        gewinner.setElo(result.getNewEloWinner());
+        gewinner.setElo1vs1(result.getNewEloWinner());
         spielerRepository.save(gewinner);
-        verlierer.setElo(result.getNewEloLoser());
+        verlierer.setElo1vs1(result.getNewEloLoser());
         spielerRepository.save(verlierer);
 
     }
@@ -100,22 +100,22 @@ public class KickerEloService {
 
         ergebnis2vs2Repository.save(ergebnis);
 
-        ResultInfo2vs2 result = new ResultInfo2vs2(gewinnerVorn.getElo(), gewinnerHinten.getElo(), verliererVorn.getElo(), verliererHinten.getElo(), toreVerlierer);
+        ResultInfo2vs2 result = new ResultInfo2vs2(gewinnerVorn.getElo2vs2(), gewinnerHinten.getElo2vs2(), verliererVorn.getElo2vs2(), verliererHinten.getElo2vs2(), toreVerlierer);
         eloCalculationService.updateElo2vs2(result);
-        gewinnerVorn.setElo(result.getNewEloWinnerFront());
+        gewinnerVorn.setElo2vs2(result.getNewEloWinnerFront());
         spielerRepository.save(gewinnerVorn);
-        gewinnerHinten.setElo(result.getNewEloWinnerBack());
+        gewinnerHinten.setElo2vs2(result.getNewEloWinnerBack());
         spielerRepository.save(gewinnerHinten);
-        verliererVorn.setElo(result.getNewEloLoserFront());
+        verliererVorn.setElo2vs2(result.getNewEloLoserFront());
         spielerRepository.save(verliererVorn);
-        verliererHinten.setElo(result.getNewEloLoserBack());
+        verliererHinten.setElo2vs2(result.getNewEloLoserBack());
         spielerRepository.save(verliererHinten);
     }
 
     public void addSpieler(String name) {
         Spieler spieler = new Spieler();
         spieler.setName(name);
-        spieler.setElo(1500);
+        spieler.setElo1vs1(1500);
         spielerRepository.save(spieler);
     }
 }

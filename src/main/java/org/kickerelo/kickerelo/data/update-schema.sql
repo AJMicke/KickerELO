@@ -30,7 +30,8 @@ CREATE TABLE spieler
 (
     id      INT          NOT NULL,
     name    VARCHAR(255) NOT NULL,
-    elo     FLOAT        NOT NULL,
+    elo1vs1 FLOAT        NOT NULL,
+    elo2vs2 FLOAT        NOT NULL,
     elo_alt FLOAT NULL,
     CONSTRAINT pk_spieler PRIMARY KEY (id)
 );
