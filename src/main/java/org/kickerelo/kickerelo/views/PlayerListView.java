@@ -23,13 +23,14 @@ public class PlayerListView extends VerticalLayout {
         playerGrid.removeColumnByKey("id");
         playerGrid.removeColumnByKey("elo_alt");
         Grid.Column<Spieler> nameColumn = playerGrid.getColumnByKey("name");
-        Grid.Column<Spieler> eloColumn = playerGrid.getColumnByKey("elo");
+        Grid.Column<Spieler> elo1vs1Column = playerGrid.getColumnByKey("elo1vs1");
+        Grid.Column<Spieler> elo2vs2Column = playerGrid.getColumnByKey("elo2vs2");
         nameColumn.setHeader("Name");
-        eloColumn.setHeader("Elo");
+        elo1vs1Column.setHeader("Elo 1 vs 1");
 
-        playerGrid.setColumnOrder(nameColumn, eloColumn);
+        playerGrid.setColumnOrder(nameColumn, elo1vs1Column, elo2vs2Column);
 
-        GridSortOrder<Spieler> sortOrder = new GridSortOrder<>(eloColumn, SortDirection.DESCENDING);
+        GridSortOrder<Spieler> sortOrder = new GridSortOrder<>(elo1vs1Column, SortDirection.DESCENDING);
         playerGrid.sort(List.of(sortOrder));
         add(subheading, playerGrid);
     }

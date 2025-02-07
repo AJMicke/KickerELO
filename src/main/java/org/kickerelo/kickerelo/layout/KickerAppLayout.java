@@ -11,10 +11,7 @@ import com.vaadin.flow.router.Layout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.theme.lumo.LumoUtility;
-import org.kickerelo.kickerelo.views.Enter1vs1View;
-import org.kickerelo.kickerelo.views.Enter2vs2View;
-import org.kickerelo.kickerelo.views.Graph1vs1View;
-import org.kickerelo.kickerelo.views.PlayerListView;
+import org.kickerelo.kickerelo.views.*;
 
 @Layout
 public class KickerAppLayout extends AppLayout {
@@ -31,8 +28,11 @@ public class KickerAppLayout extends AppLayout {
         RouterLink enter2vs2 = new RouterLink("2 vs 2", Enter2vs2View.class);
         RouterLink playerList = new RouterLink("Spielerliste", PlayerListView.class);
         RouterLink graph1vs1 = new RouterLink("Graph 1 vs 1", Graph1vs1View.class);
+        RouterLink graph2vs2 = new RouterLink("Graph 2 vs 2", Graph2vs2View.class);
 
-        Tabs tabs = new Tabs(new Tab(enter1vs1), new Tab(enter2vs2), new Tab(playerList), new Tab(graph1vs1));
+
+
+        Tabs tabs = new Tabs(new Tab(enter1vs1), new Tab(enter2vs2), new Tab(playerList), new Tab(graph1vs1), new Tab(graph2vs2));
         tabs.setOrientation(Tabs.Orientation.VERTICAL);
         addToDrawer(tabs);
     }
