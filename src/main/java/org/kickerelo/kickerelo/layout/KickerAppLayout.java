@@ -2,6 +2,7 @@ package org.kickerelo.kickerelo.layout;
 
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
+import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.sidenav.SideNav;
@@ -14,6 +15,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 import org.kickerelo.kickerelo.views.*;
 
 @Layout
+@JsModule("prefers-color-scheme.js")
 public class KickerAppLayout extends AppLayout {
 
     public KickerAppLayout() {
