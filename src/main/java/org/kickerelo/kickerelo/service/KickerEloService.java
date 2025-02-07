@@ -11,6 +11,7 @@ import org.kickerelo.kickerelo.model.ResultInfo2vs2;
 import org.kickerelo.kickerelo.repository.Ergebnis1vs1Repository;
 import org.kickerelo.kickerelo.repository.Ergebnis2vs2Repository;
 import org.kickerelo.kickerelo.repository.SpielerRepository;
+import org.kickerelo.kickerelo.util.SpielerEloComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +29,11 @@ public class KickerEloService {
     private EloCalculationService eloCalculationService;
 
     public List<String> getSpielerNamen() {
-        return spielerRepository.findAll().stream().map(Spieler::getName).toList();
+        return spielerRepository.findAll().stream().map(Spieler::getName).sorted().toList();
+    }
+
+    public List<Spieler> getSpielerEntities() {
+        return spielerRepository.findAll().stream().sorted(new SpielerEloComparator()).toList();
     }
 
     public void enterResult1vs1(String gewinnerName, String verliererName,
