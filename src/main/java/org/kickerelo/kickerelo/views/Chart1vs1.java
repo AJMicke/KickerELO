@@ -7,6 +7,7 @@ import com.github.appreciated.apexcharts.config.builder.YAxisBuilder;
 import com.github.appreciated.apexcharts.config.chart.Type;
 import com.github.appreciated.apexcharts.config.chart.builder.ZoomBuilder;
 import com.github.appreciated.apexcharts.config.chart.zoom.ZoomType;
+import com.github.appreciated.apexcharts.config.yaxis.Title;
 import com.github.appreciated.apexcharts.helper.Series;
 import org.kickerelo.kickerelo.data.Spieler;
 import org.kickerelo.kickerelo.util.Spieler1vs1EloComparator;

@@ -12,6 +12,6 @@ public class Graph2vs2View extends VerticalLayout {
     public Graph2vs2View(KickerEloService service) {
         H2 subheading = new H2("2 vs 2 Elo");
         chart2vs2 = new Chart2vs2(service.getSpielerEntities());
-        add(chart2vs2.build(), subheading);
+        add(subheading, chart2vs2.build());
     }
 }

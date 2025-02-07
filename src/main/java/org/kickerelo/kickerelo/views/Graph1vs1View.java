@@ -14,7 +14,7 @@ public class Graph1vs1View extends VerticalLayout {
     public Graph1vs1View(KickerEloService service) {
         H2 subheading = new H2("1 vs 1 Elo");
         chart1vs1 = new Chart1vs1(service.getSpielerEntities());
-        add(chart1vs1.build(), subheading);
+        add(subheading, chart1vs1.build());
     }
 
 }

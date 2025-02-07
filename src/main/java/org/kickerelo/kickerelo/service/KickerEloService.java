@@ -1,21 +1,24 @@
 package org.kickerelo.kickerelo.service;
 
 import org.kickerelo.kickerelo.exception.DuplicatePlayerException;
+import org.kickerelo.kickerelo.exception.InvalidDataException;
 import org.kickerelo.kickerelo.exception.NoSuchPlayerException;
 import org.kickerelo.kickerelo.data.Ergebnis1vs1;
 import org.kickerelo.kickerelo.data.Ergebnis2vs2;
 import org.kickerelo.kickerelo.data.Spieler;
 import org.kickerelo.kickerelo.exception.PlayerNameNotSetException;
-import org.kickerelo.kickerelo.model.ResultInfo1vs1;
-import org.kickerelo.kickerelo.model.ResultInfo2vs2;
 import org.kickerelo.kickerelo.repository.Ergebnis1vs1Repository;
 import org.kickerelo.kickerelo.repository.Ergebnis2vs2Repository;
 import org.kickerelo.kickerelo.repository.SpielerRepository;
+import org.kickerelo.kickerelo.util.Ergebnis1vs1TimeComparator;
+import org.kickerelo.kickerelo.util.Ergebnis2vs2TimeComparator;
 import org.kickerelo.kickerelo.util.Spieler1vs1EloComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 public class KickerEloService {
@@ -45,6 +48,9 @@ public class KickerEloService {
         if (gewinnerName.equals(verliererName)) {
             throw new DuplicatePlayerException("winner and loser identical");
         }
+        if (toreVerlierer > 9 || toreVerlierer < 0) {
+            throw new InvalidDataException("too many goals");
+        }
 
         Spieler gewinner = spielerRepository.findByName(gewinnerName)
                 .orElseThrow(() -> new NoSuchPlayerException(gewinnerName));
@@ -57,11 +63,8 @@ public class KickerEloService {
 
         ergebnis1vs1Repository.save(ergebnis);
 
-        ResultInfo1vs1 result = new ResultInfo1vs1(gewinner.getElo1vs1(), ergebnis.getToreVerlierer(), verlierer.getElo1vs1());
-        eloCalculationService.updateElo1vs1(result);
-        gewinner.setElo1vs1(result.getNewEloWinner());
+        eloCalculationService.updateElo1vs1(gewinner, verlierer, toreVerlierer);
         spielerRepository.save(gewinner);
-        verlierer.setElo1vs1(result.getNewEloLoser());
         spielerRepository.save(verlierer);
 
     }
@@ -84,6 +87,10 @@ public class KickerEloService {
             throw new DuplicatePlayerException("players must not be identical");
         }
 
+        if (toreVerlierer > 9 || toreVerlierer < 0) {
+            throw new InvalidDataException("too many loser goals");
+        }
+
         Spieler gewinnerVorn = spielerRepository.findByName(gewinnerNameVorn)
                 .orElseThrow(() -> new NoSuchPlayerException(gewinnerNameVorn));
 
@@ -100,22 +107,56 @@ public class KickerEloService {
 
         ergebnis2vs2Repository.save(ergebnis);
 
-        ResultInfo2vs2 result = new ResultInfo2vs2(gewinnerVorn.getElo2vs2(), gewinnerHinten.getElo2vs2(), verliererVorn.getElo2vs2(), verliererHinten.getElo2vs2(), toreVerlierer);
-        eloCalculationService.updateElo2vs2(result);
-        gewinnerVorn.setElo2vs2(result.getNewEloWinnerFront());
+        eloCalculationService.updateElo2vs2(gewinnerVorn, gewinnerHinten, verliererVorn, verliererHinten, toreVerlierer);
         spielerRepository.save(gewinnerVorn);
-        gewinnerHinten.setElo2vs2(result.getNewEloWinnerBack());
         spielerRepository.save(gewinnerHinten);
-        verliererVorn.setElo2vs2(result.getNewEloLoserFront());
         spielerRepository.save(verliererVorn);
-        verliererHinten.setElo2vs2(result.getNewEloLoserBack());
         spielerRepository.save(verliererHinten);
     }
 
     public void addSpieler(String name) {
+        if (name == null || name.isBlank()) {
+            throw new PlayerNameNotSetException("Leerer Name");
+        }
+        if (getSpielerNamen().contains(name)) {
+            throw new DuplicatePlayerException("players must not be identical");
+        }
         Spieler spieler = new Spieler();
         spieler.setName(name);
-        spieler.setElo1vs1(1500);
+        spieler.setElo1vs1(eloCalculationService.getInitialElo1vs1());
+        spieler.setElo2vs2(eloCalculationService.getInitialElo2vs2());
         spielerRepository.save(spieler);
+    }
+
+    public void recalculateAll1vs1() {
+        HashMap<Integer, Spieler> players = new HashMap<>();
+        for (Spieler spieler : spielerRepository.findAll()) {
+            spieler.setElo1vs1(eloCalculationService.getInitialElo1vs1());
+            players.put(spieler.getId(), spieler);
+        }
+        Stream<Ergebnis1vs1> results = ergebnis1vs1Repository.findAll().stream().sorted(new Ergebnis1vs1TimeComparator());
+        results.forEach(r -> {
+            eloCalculationService.updateElo1vs1(players.get(r.getGewinner().getId()),
+                                                players.get(r.getVerlierer().getId()),
+                                                r.getToreVerlierer());
+        });
+        spielerRepository.saveAll(players.values());
+    }
+
+    public void recalculateAll2vs2() {
+        HashMap<Integer, Spieler> players = new HashMap<>();
+        for (Spieler spieler : spielerRepository.findAll()) {
+            spieler.setElo2vs2(eloCalculationService.getInitialElo2vs2());
+            players.put(spieler.getId(), spieler);
+        }
+        Stream<Ergebnis2vs2> results = ergebnis2vs2Repository.findAll().stream().sorted(new Ergebnis2vs2TimeComparator());
+        results.forEach(r -> {
+            eloCalculationService.updateElo2vs2(players.get(r.getGewinnerVorn().getId()),
+                                                players.get(r.getGewinnerHinten().getId()),
+                                                players.get(r.getVerliererVorn().getId()),
+                                                players.get(r.getVerliererHinten().getId()),
+                                                r.getToreVerlierer());
+        });
+        spielerRepository.saveAll(players.values());
     }
 }
