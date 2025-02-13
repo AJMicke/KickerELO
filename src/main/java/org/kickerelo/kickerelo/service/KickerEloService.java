@@ -20,6 +20,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Stream;
 
+/**
+ * Provides all functions for the application
+ */
 @Service
 public class KickerEloService {
     @Autowired
@@ -31,16 +34,29 @@ public class KickerEloService {
     @Autowired
     private EloCalculationService eloCalculationService;
 
+    /**
+     * @return List of all player names sorted alphabetically
+     */
     public List<String> getSpielerNamen() {
         return spielerRepository.findAll().stream().map(Spieler::getName).sorted().toList();
     }
 
+    /**
+     * @return List of all player entities sorted by 1 vs 1 ELO
+     */
     public List<Spieler> getSpielerEntities() {
         return spielerRepository.findAll().stream().sorted(new Spieler1vs1EloComparator()).toList();
     }
 
+    /**
+     * Enter a result of a 1 vs 1 game
+     * @param gewinnerName The name of the winning player
+     * @param verliererName The name of the losing player
+     * @param toreVerlierer The number of goals of the loser
+     */
     public void enterResult1vs1(String gewinnerName, String verliererName,
                                 short toreVerlierer) {
+        // Check if the inputs are valid
         if (gewinnerName == null || verliererName == null) {
             throw new PlayerNameNotSetException("Alle Namen müssen gesetzt sein");
         }
@@ -60,7 +76,6 @@ public class KickerEloService {
 
 
         Ergebnis1vs1 ergebnis = new Ergebnis1vs1(gewinner, verlierer, toreVerlierer);
-
         ergebnis1vs1Repository.save(ergebnis);
 
         eloCalculationService.updateElo1vs1(gewinner, verlierer, toreVerlierer);
@@ -69,10 +84,18 @@ public class KickerEloService {
 
     }
 
+    /**
+     * Enter the result of a 2 vs 2 game
+     * @param gewinnerNameVorn Name of the winning offensive player
+     * @param gewinnerNameHinten Name of the winning defensive player
+     * @param verliererNameVorn Name of the losing offensive player
+     * @param verliererNameHinten Name of the losing defensive player
+     * @param toreVerlierer Number of goals of the losing team
+     */
     public void enterResult2vs2(String gewinnerNameVorn, String gewinnerNameHinten,
                                 String verliererNameVorn, String verliererNameHinten,
                                 short toreVerlierer) {
-
+        // Check if the inputs are valid
         if (gewinnerNameVorn == null || gewinnerNameHinten == null
             || verliererNameVorn == null || verliererNameHinten == null) {
             throw new PlayerNameNotSetException("Alle Namen müssen gesetzt sein");
@@ -104,7 +127,6 @@ public class KickerEloService {
                 .orElseThrow(() -> new NoSuchPlayerException(verliererNameHinten));
 
         Ergebnis2vs2 ergebnis = new Ergebnis2vs2(gewinnerVorn, gewinnerHinten, verliererVorn, verliererHinten, toreVerlierer);
-
         ergebnis2vs2Repository.save(ergebnis);
 
         eloCalculationService.updateElo2vs2(gewinnerVorn, gewinnerHinten, verliererVorn, verliererHinten, toreVerlierer);
@@ -114,12 +136,20 @@ public class KickerEloService {
         spielerRepository.save(verliererHinten);
     }
 
+    /**
+     * Add a new player to the system
+     * @param name Name of the new player
+     */
     public void addSpieler(String name) {
+        // Check if the player name is valid
         if (name == null || name.isBlank()) {
             throw new PlayerNameNotSetException("Leerer Name");
         }
         if (getSpielerNamen().contains(name)) {
             throw new DuplicatePlayerException("players must not be identical");
+        }
+        if (name.length() > 30) {
+            throw new InvalidDataException("Zu lang");
         }
         Spieler spieler = new Spieler();
         spieler.setName(name);
@@ -128,6 +158,9 @@ public class KickerEloService {
         spielerRepository.save(spieler);
     }
 
+    /**
+     * Recalculate and overwrite all 1 vs 1 ELOs.
+     */
     public void recalculateAll1vs1() {
         HashMap<Integer, Spieler> players = new HashMap<>();
         for (Spieler spieler : spielerRepository.findAll()) {
@@ -143,6 +176,9 @@ public class KickerEloService {
         spielerRepository.saveAll(players.values());
     }
 
+    /**
+     * Recalculate and overwrite all 2 vs 2 ELOs.
+     */
     public void recalculateAll2vs2() {
         HashMap<Integer, Spieler> players = new HashMap<>();
         for (Spieler spieler : spielerRepository.findAll()) {

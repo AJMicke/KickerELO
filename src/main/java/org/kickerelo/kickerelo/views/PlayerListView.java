@@ -11,9 +11,10 @@ import org.kickerelo.kickerelo.service.KickerEloService;
 
 import java.util.List;
 
-@Route("playerlist")
+@Route("")
 public class PlayerListView extends VerticalLayout {
     public PlayerListView(KickerEloService eloService) {
+        setSizeFull();
         H2 subheading = new H2("Spielerliste");
 
         List<Spieler> players = eloService.getSpielerEntities();

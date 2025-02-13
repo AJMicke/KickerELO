@@ -8,6 +8,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import org.kickerelo.kickerelo.exception.DuplicatePlayerException;
+import org.kickerelo.kickerelo.exception.InvalidDataException;
 import org.kickerelo.kickerelo.exception.PlayerNameNotSetException;
 import org.kickerelo.kickerelo.service.KickerEloService;
 
@@ -26,10 +27,11 @@ public class AdminView extends VerticalLayout {
             } catch (PlayerNameNotSetException err) {
                 Notification.show("Spielername darf nicht leer sein").addThemeVariants(NotificationVariant.LUMO_ERROR);
                 return;
-            }
-            catch (DuplicatePlayerException err) {
+            } catch (DuplicatePlayerException err) {
                 Notification.show("Spieler existiert bereits").addThemeVariants(NotificationVariant.LUMO_ERROR);
                 return;
+            } catch (InvalidDataException err) {
+                Notification.show("Name zu lang").addThemeVariants(NotificationVariant.LUMO_ERROR);
             }
             Notification.show("Spieler gespeichert").addThemeVariants(NotificationVariant.LUMO_SUCCESS);
         });

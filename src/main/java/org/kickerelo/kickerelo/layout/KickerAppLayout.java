@@ -4,14 +4,10 @@ import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.orderedlayout.Scroller;
-import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.Layout;
-import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
-import com.vaadin.flow.theme.lumo.LumoUtility;
 import org.kickerelo.kickerelo.views.*;
 
 @Layout
@@ -33,9 +29,7 @@ public class KickerAppLayout extends AppLayout {
         RouterLink graph2vs2 = new RouterLink("Graph 2 vs 2", Graph2vs2View.class);
         RouterLink admin = new RouterLink("Verwaltung", AdminView.class);
 
-
-
-        Tabs tabs = new Tabs(new Tab(enter1vs1), new Tab(enter2vs2), new Tab(playerList), new Tab(graph1vs1), new Tab(graph2vs2), new Tab(admin));
+        Tabs tabs = new Tabs(new Tab(playerList), new Tab(enter1vs1), new Tab(enter2vs2), new Tab(graph1vs1), new Tab(graph2vs2), new Tab(admin));
         tabs.setOrientation(Tabs.Orientation.VERTICAL);
         addToDrawer(tabs);
     }
