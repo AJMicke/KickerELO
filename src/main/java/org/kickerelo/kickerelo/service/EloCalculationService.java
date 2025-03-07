@@ -9,9 +9,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class EloCalculationService {
-    // Default ELOs for a player with 0 games
-    final float initialElo1vs1 = 1500;
-    final float initialElo2vs2 = 1500;
+    private final float initialElo1vs1 = 1500;
+    private final float initialElo2vs2 = 1500;
 
     /**
      * Updates the 1 vs 1 ELOs of the players according to the result of the game.
@@ -20,8 +19,16 @@ public class EloCalculationService {
      * @param toreVerlierer The number of goals of the losing player
      */
     public void updateElo1vs1(Spieler gewinner, Spieler verlierer, short toreVerlierer) {
-        gewinner.setElo1vs1(gewinner.getElo1vs1() + 10 - toreVerlierer);
-        verlierer.setElo1vs1(verlierer.getElo1vs1() - 10 + toreVerlierer);
+        final float initialElo = 1500;
+        final float baseK = 50;
+        final float reductionPerGoal = 0.1f * baseK;
+
+        final float finalK = baseK - (reductionPerGoal * toreVerlierer);
+        float expectedScoreWinner = (float) (1 / (1 + Math.pow(10, (verlierer.getElo1vs1() - gewinner.getElo1vs1()) / 400)));
+        float expectedScoreLoser = (float) (1 / (1 + Math.pow(10, (gewinner.getElo1vs1() - verlierer.getElo1vs1()) / 400)));
+
+        gewinner.setElo1vs1(gewinner.getElo1vs1() + finalK * (1-expectedScoreWinner));
+        verlierer.setElo1vs1(verlierer.getElo1vs1() - finalK * expectedScoreLoser);
     }
 
     /**
