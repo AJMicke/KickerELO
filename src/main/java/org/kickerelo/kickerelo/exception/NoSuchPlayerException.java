@@ -1,4 +1,4 @@
-package org.kickerelo.kickerelo;
+package org.kickerelo.kickerelo.exception;
 
 public class NoSuchPlayerException extends RuntimeException {
     public NoSuchPlayerException(String message) {
