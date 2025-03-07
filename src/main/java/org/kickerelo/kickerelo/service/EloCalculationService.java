@@ -19,7 +19,6 @@ public class EloCalculationService {
      * @param toreVerlierer The number of goals of the losing player
      */
     public void updateElo1vs1(Spieler gewinner, Spieler verlierer, short toreVerlierer) {
-        final float initialElo = 1500;
         final float baseK = 50;
         final float reductionPerGoal = 0.1f * baseK;
 
@@ -43,7 +42,7 @@ public class EloCalculationService {
         gewinnerVorn.setElo2vs2(gewinnerVorn.getElo2vs2() + 10 - toreVerlierer);
         gewinnerHinten.setElo2vs2(gewinnerHinten.getElo2vs2() + 10 - toreVerlierer);
         verliererVorn.setElo2vs2(verliererVorn.getElo2vs2() - 10 + toreVerlierer);
-        verliererHinten.setElo2vs2(verliererHinten.getElo2vs2());
+        verliererHinten.setElo2vs2(verliererHinten.getElo2vs2() - 10 + toreVerlierer);
     }
 
     public float getInitialElo1vs1() {

@@ -28,6 +28,7 @@ public class PlayerListView extends VerticalLayout {
         Grid.Column<Spieler> elo2vs2Column = playerGrid.getColumnByKey("elo2vs2");
         nameColumn.setHeader("Name");
         elo1vs1Column.setHeader("Elo 1 vs 1");
+        elo2vs2Column.setHeader("Elo 2 vs 2");
 
         playerGrid.setColumnOrder(nameColumn, elo1vs1Column, elo2vs2Column);
 
