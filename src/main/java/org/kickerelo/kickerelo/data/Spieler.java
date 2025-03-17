@@ -64,4 +64,9 @@ public class Spieler {
     public void setElo_alt(float elo_alt) {
         this.elo_alt = elo_alt;
     }
+
+    @Override
+    public String toString() {
+        return this.name;
+    }
 }
