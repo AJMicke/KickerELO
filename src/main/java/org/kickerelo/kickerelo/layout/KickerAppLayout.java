@@ -27,9 +27,12 @@ public class KickerAppLayout extends AppLayout {
         RouterLink playerList = new RouterLink("Spielerliste", PlayerListView.class);
         RouterLink graph1vs1 = new RouterLink("Graph 1 vs 1", Graph1vs1View.class);
         RouterLink graph2vs2 = new RouterLink("Graph 2 vs 2", Graph2vs2View.class);
+        RouterLink history1vs1 = new RouterLink("Resultate 1 vs 1", History1vs1View.class);
+        RouterLink history2vs2 = new RouterLink("Resultate 2 vs 2", History2vs2View.class);
         RouterLink admin = new RouterLink("Verwaltung", AdminView.class);
 
-        Tabs tabs = new Tabs(new Tab(playerList), new Tab(enter1vs1), new Tab(enter2vs2), new Tab(graph1vs1), new Tab(graph2vs2), new Tab(admin));
+        Tabs tabs = new Tabs(new Tab(playerList), new Tab(enter1vs1), new Tab(enter2vs2), new Tab(graph1vs1),
+                new Tab(graph2vs2), new Tab(history1vs1), new Tab(history2vs2), new Tab(admin));
         tabs.setOrientation(Tabs.Orientation.VERTICAL);
         addToDrawer(tabs);
     }
