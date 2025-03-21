@@ -22,6 +22,7 @@ import java.util.List;
 public class History1vs1View extends VerticalLayout {
     List<Ergebnis1vs1> res;
     public History1vs1View(Ergebnis1vs1Repository repo) {
+        setSizeFull();
         H2 subheading = new H2("Spiele 1 vs 1");
         res = repo.findAll();
 
