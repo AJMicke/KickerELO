@@ -64,13 +64,15 @@ public class History2vs2View extends VerticalLayout {
         grid.sort(List.of(sortOrder));
 
         dataView.addFilter(result -> {
-            String name1 = result.getGewinnerVorn().getName();
-            String name2 = result.getVerliererVorn().getName();
-            String name3 = result.getVerliererHinten().getName();
-            String name4 = result.getGewinnerHinten().getName();
+            String name1 = result.getGewinnerVorn().getName().toLowerCase();
+            String name2 = result.getVerliererVorn().getName().toLowerCase();
+            String name3 = result.getVerliererHinten().getName().toLowerCase();
+            String name4 = result.getGewinnerHinten().getName().toLowerCase();
             String s1 = filter1.getValue();
+            if (s1 != null) s1 = s1.toLowerCase();
             boolean p1 = !(s1 == null || s1.isEmpty());
             String s2 = filter2.getValue();
+            if (s2 != null) s2 = s2.toLowerCase();
             boolean p2 = !(s2 == null || s2.isEmpty());
 
             if (p1 && p2) {

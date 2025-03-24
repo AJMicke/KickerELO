@@ -61,11 +61,13 @@ public class History1vs1View extends VerticalLayout {
         grid.sort(List.of(sortOrder));
 
         dataView.addFilter(result -> {
-            String name1 = result.getGewinner().getName();
-            String name2 = result.getVerlierer().getName();
+            String name1 = result.getGewinner().getName().toLowerCase();
+            String name2 = result.getVerlierer().getName().toLowerCase();
             String s1 = filter1.getValue();
+            if (s1 != null) s1 = s1.toLowerCase();
             boolean p1 = !(s1 == null || s1.isEmpty());
             String s2 = filter2.getValue();
+            if (s2 != null) s2 = s2.toLowerCase();
             boolean p2 = !(s2 == null || s2.isEmpty());
 
             if (p1 && p2) {
