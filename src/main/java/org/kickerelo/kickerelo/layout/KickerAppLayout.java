@@ -10,6 +10,7 @@ import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
+import com.vaadin.flow.dom.Style;
 import com.vaadin.flow.router.Layout;
 import org.kickerelo.kickerelo.views.*;
 
@@ -41,12 +42,15 @@ public class KickerAppLayout extends AppLayout {
                 new SideNavItem("Historie", History2vs2View.class, VaadinIcon.RECORDS.create()));
 
 
-        Image githubLogo = new Image("https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png", "Github");
+        Image githubLogo = new Image("github-mark.png", "Github");
         githubLogo.setHeight("30px");
         Anchor gitLink = new Anchor("https://github.com/AJMicke/KickerELO", githubLogo);
         Div spacingDiv = new Div(gitLink);
         spacingDiv.setSizeFull();
         gitLink.setTarget("_blank");
-        addToDrawer(general, nav1, nav2, spacingDiv, gitLink);
+        gitLink.getElement().getStyle().set("background-color", "transparent");
+        Div gitLinkDiv = new Div(gitLink);
+        gitLinkDiv.getStyle().setAlignSelf(Style.AlignSelf.END).setMarginRight("5px");
+        addToDrawer(general, nav1, nav2, spacingDiv, gitLinkDiv);
     }
 }
