@@ -3,7 +3,10 @@ package org.kickerelo.kickerelo.layout;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.dependency.JsModule;
+import com.vaadin.flow.component.html.Anchor;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
@@ -37,6 +40,13 @@ public class KickerAppLayout extends AppLayout {
                 new SideNavItem("ELO-Graph", Graph2vs2View.class, VaadinIcon.BAR_CHART.create()),
                 new SideNavItem("Historie", History2vs2View.class, VaadinIcon.RECORDS.create()));
 
-        addToDrawer(general, nav1, nav2);
+
+        Image githubLogo = new Image("https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png", "Github");
+        githubLogo.setHeight("30px");
+        Anchor gitLink = new Anchor("https://github.com/AJMicke/KickerELO", githubLogo);
+        Div spacingDiv = new Div(gitLink);
+        spacingDiv.setSizeFull();
+        gitLink.setTarget("_blank");
+        addToDrawer(general, nav1, nav2, spacingDiv, gitLink);
     }
 }
