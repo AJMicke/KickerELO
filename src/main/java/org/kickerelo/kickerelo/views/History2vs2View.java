@@ -57,7 +57,7 @@ public class History2vs2View extends VerticalLayout {
         goals.setHeader("Verlierertore");
         Grid.Column<Ergebnis2vs2> timestamp = grid.getColumnByKey("timestamp");
         timestamp.setHeader("Zeitpunkt");
-        timestamp.setRenderer(new LocalDateTimeRenderer<>(Ergebnis2vs2::getTimestamp, "dd.MM.yy HH:mm"));
+        timestamp.setRenderer(new LocalDateTimeRenderer<>(Ergebnis2vs2::getTimestamp, "dd.MM.yy"));
 
         grid.setColumnOrder(winnerFront, winnerBack, loserFront, loserBack, goals, timestamp);
         GridSortOrder<Ergebnis2vs2> sortOrder = new GridSortOrder<>(timestamp, SortDirection.DESCENDING);
