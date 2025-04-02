@@ -4,6 +4,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridSortOrder;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -27,8 +28,8 @@ public class History2vs2View extends VerticalLayout {
         Grid<Ergebnis2vs2> grid = new Grid<>(Ergebnis2vs2.class);
         GridListDataView<Ergebnis2vs2> dataView = grid.setItems(res);
 
-        HorizontalLayout filterLayout = new HorizontalLayout();
-        filterLayout.setWidth("95%");
+        HorizontalLayout team1Layout = new HorizontalLayout();
+        team1Layout.setWidth("95%");
         TextField filter1 = new TextField();
         filter1.setPlaceholder("Spieler");
         filter1.setPrefixComponent(new Icon(VaadinIcon.SEARCH));
@@ -41,8 +42,23 @@ public class History2vs2View extends VerticalLayout {
         filter2.setValueChangeMode(ValueChangeMode.EAGER);
         filter2.addValueChangeListener(event -> dataView.refreshAll());
         filter2.setMaxWidth("50%");
+        team1Layout.add(new Paragraph("Team 1"), filter1, filter2);
 
-        filterLayout.add(filter1, filter2);
+        HorizontalLayout team2Layout = new HorizontalLayout();
+        team1Layout.setWidth("95%");
+        TextField filter3 = new TextField();
+        filter3.setPlaceholder("Spieler");
+        filter3.setPrefixComponent(new Icon(VaadinIcon.SEARCH));
+        filter3.setValueChangeMode(ValueChangeMode.EAGER);
+        filter3.addValueChangeListener(event -> dataView.refreshAll());
+        filter3.setMaxWidth("50%");
+        TextField filter4 = new TextField();
+        filter4.setPlaceholder("Spieler");
+        filter4.setPrefixComponent(new Icon(VaadinIcon.SEARCH));
+        filter4.setValueChangeMode(ValueChangeMode.EAGER);
+        filter4.addValueChangeListener(event -> dataView.refreshAll());
+        filter4.setMaxWidth("50%");
+        team2Layout.add(new Paragraph("Team 2"), filter3, filter4);
 
         grid.removeColumnByKey("id");
         Grid.Column<Ergebnis2vs2> winnerFront = grid.getColumnByKey("gewinnerVorn");
@@ -64,34 +80,26 @@ public class History2vs2View extends VerticalLayout {
         grid.sort(List.of(sortOrder));
 
         dataView.addFilter(result -> {
-            String name1 = result.getGewinnerVorn().getName().toLowerCase();
-            String name2 = result.getVerliererVorn().getName().toLowerCase();
-            String name3 = result.getVerliererHinten().getName().toLowerCase();
-            String name4 = result.getGewinnerHinten().getName().toLowerCase();
-            String s1 = filter1.getValue();
-            if (s1 != null) s1 = s1.toLowerCase();
-            boolean p1 = !(s1 == null || s1.isEmpty());
-            String s2 = filter2.getValue();
-            if (s2 != null) s2 = s2.toLowerCase();
-            boolean p2 = !(s2 == null || s2.isEmpty());
+            String winF = result.getGewinnerVorn().getName().toLowerCase();
+            String losF = result.getVerliererVorn().getName().toLowerCase();
+            String losB = result.getVerliererHinten().getName().toLowerCase();
+            String winB = result.getGewinnerHinten().getName().toLowerCase();
+            String t11 = filter1.getValue() != null ? filter1.getValue().toLowerCase() : "";
+            String t12 = filter2.getValue() != null ? filter2.getValue().toLowerCase() : "";
+            String t21 = filter3.getValue() != null ? filter3.getValue().toLowerCase() : "";
+            String t22 = filter4.getValue() != null ? filter4.getValue().toLowerCase() : "";
+            return checkTeamFits(t11, t12, winF, winB) && checkTeamFits(t21, t22, losF, losB)
+                    || checkTeamFits(t11, t12, losF, losB) && checkTeamFits(t21, t22, winF, winB);
 
-            if (p1 && p2) {
-                return name1.contains(s1) && name2.contains(s2) || name2.contains(s1) && name1.contains(s2)
-                    || name1.contains(s1) && name3.contains(s2) || name3.contains(s1) && name1.contains(s2)
-                    || name1.contains(s1) && name4.contains(s2) || name4.contains(s1) && name1.contains(s2)
-                    || name2.contains(s1) && name3.contains(s2) || name3.contains(s1) && name2.contains(s2)
-                    || name2.contains(s1) && name4.contains(s2) || name4.contains(s1) && name2.contains(s2)
-                    || name3.contains(s1) && name4.contains(s2) || name4.contains(s1) && name3.contains(s2);
-            }
-            if (p1) {
-                return name1.contains(s1) || name2.contains(s1) || name3.contains(s1) || name4.contains(s1);
-            }
-            if (p2) {
-                return name1.contains(s2) || name2.contains(s2) || name3.contains(s2) || name4.contains(s2);
-            }
-            return true;
         });
 
-        add(subheading, filterLayout, grid);
+        add(subheading, team1Layout, team2Layout, grid);
+    }
+
+    private boolean checkTeamFits(String p1, String p2, String tp1, String tp2) {
+        if (p1.isBlank() && p2.isBlank()) return true;
+        if (p1.isBlank()) return tp1.contains(p2) || tp2.contains(p2);
+        if (p2.isBlank()) return tp1.contains(p1) || tp2.contains(p1);
+        return (tp1.contains(p1) && tp2.contains(p2)) || (tp2.contains(p1) && tp1.contains(p2));
     }
 }
