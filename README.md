@@ -42,7 +42,7 @@ credentials are correctly configured in `application-prod.properties` and skip t
 You can quickly start a database using Docker and update its schema using the provided `update-schema.sql` file.
 
 ```sh
-docker run --name kickerelo-db -e MYSQL_ROOT_PASSWORT=root -e MYSQL_DATABASE=kickerelo -p 3306:3306 -d mariadb:latest
+docker run --name kickerelo-db -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=kickerelo -p 3306:3306 -d mariadb:latest
 docker exec -i kickerelo-db mysql -u root -p kickerelo < update-schema.sql
 ```
 
