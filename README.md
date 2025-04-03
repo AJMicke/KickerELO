@@ -11,48 +11,62 @@ It uses **Spring Boot** for the backend, **Vaadin** for the frontend, and **Mari
 
 ## Installation
 
-### 1️⃣  Clone the repository
+### Clone the repository
 ```sh
 git clone https://github.com/your-repo/kickerelo.git
 cd kickerelo
 ```
 
-### 2️⃣  Set up the database
+If you want to run the application in production mode, you can skip to [Production](#production) and set up the database.
 
-- **For testing**: No database setup is required, as an H2 in-memory database is used by default.
-- **For production**: The application requires MariaDB. If MariaDB is already installed, make sure the database and
-credentials are correctly configured in `application.properties`.
 
-If you don't have MariaDB installed, you can quickly start a database using Docker:
+### Testing
+
+To run the application in a test environment, you can use an embedded H2 database. This is useful for development and testing purposes.
+
+To build the project and run the application with the embedded H2 database, use the following commands:
+
+```sh
+mvn clean package
+mvn spring-boot:run
+```
+
+
+### Production
+
+The application requires a database to store the data. If MariaDB is already installed, make sure the database and
+credentials are correctly configured in `application-prod.properties` and skip to step [Build the project](#build-the-project).
+
+#### Set up database
+
+You can quickly start a database using Docker and update its schema using the provided `update-schema.sql` file.
 
 ```sh
 docker run --name kickerelo-db -e MYSQL_ROOT_PASSWORT=root -e MYSQL_DATABASE=kickerelo -p 3306:3306 -d mariadb:latest
+docker exec -i kickerelo-db mysql -u root -p kickerelo < update-schema.sql
 ```
 
-### 3️⃣  Build the project
+
+#### Build the project
 
 To generate the file `target/kickerelo.jar`:
 
 ```sh
-mvn clean package
+mvn clean package -Pproduction
 ```
 
-### 4️⃣  Run the application
+### Run the application
 
-- For testing (default):
+You can run the application in two ways:
 
-```sh
-mvn spring-boot:run
-```
-
-- For production (requires MariaDB):
+1. Using Maven:
 
 ```sh
 mvn spring-boot:run -Dspring-boot.run.profiles=production
 ```
 
-Alternatively, you can run the built .jar file:
+2. Using the built .jar file:
 
 ```sh
-java -jar target/kickerelo.jar
+java -jar target/kickerelo.jar --spring.profiles.active=prod
 ```
