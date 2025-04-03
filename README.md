@@ -26,7 +26,7 @@ credentials are correctly configured in `application.properties`.
 If you don't have MariaDB installed, you can quickly start a database using Docker:
 
 ```sh
-docker run --name kickerelo-db -e MYSQL_ROOT_PASSWORT=root -e MYSQL_DATABASE=kickerelo -p 3306:3306 -d mariadb:latest
+docker run --name kickerelo-db -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=kickerelo -p 3306:3306 -d mariadb:latest
 ```
 
 ### 3️⃣  Build the project
