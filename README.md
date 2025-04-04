@@ -70,3 +70,6 @@ mvn spring-boot:run -Dspring-boot.run.profiles=prod
 ```sh
 java -jar target/kickerelo.jar --spring.profiles.active=prod
 ```
+
+## License
+This project is licensed under the terms of the Do What The F*ck You Want To Public License. See [LICENSE](LICENSE) for more details.
