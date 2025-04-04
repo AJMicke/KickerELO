@@ -15,7 +15,7 @@ import com.vaadin.flow.router.Layout;
 import org.kickerelo.kickerelo.views.*;
 
 @Layout
-@JsModule("prefers-color-scheme.js")
+@JsModule("./prefers-color-scheme.js")
 public class KickerAppLayout extends AppLayout {
 
     public KickerAppLayout() {
