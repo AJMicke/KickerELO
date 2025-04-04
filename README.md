@@ -62,7 +62,7 @@ You can run the application in two ways:
 1. Using Maven:
 
 ```sh
-mvn spring-boot:run -Dspring-boot.run.profiles=production
+mvn spring-boot:run -Dspring-boot.run.profiles=prod
 ```
 
 2. Using the built .jar file:
