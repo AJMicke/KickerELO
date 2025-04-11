@@ -38,6 +38,9 @@ public class Enter1vs1View extends VerticalLayout {
             try {
                 eloService.enterResult1vs1(winnerSelect.getValue(), loserSelect.getValue(), loserGoals.getValue().shortValue());
                 Notification.show("Gespeichert").addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                winnerSelect.setValue(null);
+                loserSelect.setValue(null);
+                loserGoals.setValue(0);
             } catch (NoSuchPlayerException err) {
                 Notification.show("Unbekannter Spieler").addThemeVariants(NotificationVariant.LUMO_ERROR);
             } catch (DuplicatePlayerException err) {
@@ -47,7 +50,9 @@ public class Enter1vs1View extends VerticalLayout {
             } catch (InvalidDataException err) {
                 Notification.show("Verliertore falsch").addThemeVariants(NotificationVariant.LUMO_ERROR);
             }
+            e.getSource().setEnabled(true);
         });
+        saveButton.setDisableOnClick(true);
 
 
 
