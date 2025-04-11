@@ -45,6 +45,11 @@ public class Enter2vs2View extends VerticalLayout {
             try {
                 eloService.enterResult2vs2(winnerFrontSelect.getValue(), winnerBackSelect.getValue(), loserFrontSelect.getValue(), loserBackSelect.getValue(), loserGoals.getValue().shortValue());
                 Notification.show("Gespeichert").addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                winnerFrontSelect.setValue(null);
+                winnerBackSelect.setValue(null);
+                loserFrontSelect.setValue(null);
+                loserBackSelect.setValue(null);
+                loserGoals.setValue(0);
             } catch (NoSuchPlayerException err) {
                 Notification.show("Unbekannter Spieler").addThemeVariants(NotificationVariant.LUMO_ERROR);
             } catch (DuplicatePlayerException err) {
@@ -54,7 +59,9 @@ public class Enter2vs2View extends VerticalLayout {
             } catch (InvalidDataException err) {
                 Notification.show("Verliertore falsch").addThemeVariants(NotificationVariant.LUMO_ERROR);
             }
+            e.getSource().setEnabled(true);
         });
+        saveButton.setDisableOnClick(true);
 
 
         // Use custom CSS classes to apply styling. This is defined in
