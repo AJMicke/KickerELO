@@ -1,13 +1,10 @@
 package org.kickerelo.kickerelo.service;
 
 import org.kickerelo.kickerelo.data.Spieler;
-import org.kickerelo.kickerelo.exception.NoSuchPlayerException;
 import org.kickerelo.kickerelo.repository.Ergebnis2vs2Repository;
 import org.kickerelo.kickerelo.repository.SpielerRepository;
 import org.kickerelo.kickerelo.util.Position;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class Stat2vs2Service {
@@ -34,12 +31,12 @@ public class Stat2vs2Service {
                 wins = 0;
                 losses = 0;
         }
-        return (float) (100 * wins) / (wins+losses);
+        return (float) wins / (wins+losses);
     }
 
-    public Float getWinrate(String playerName, Position p) {
-        Optional<Spieler> spieler = spielerRepository.findByName(playerName);
-        if (spieler.isEmpty()) throw new NoSuchPlayerException(playerName);
-        return getWinrate(spieler.get(), p);
+    public Float getFrontRate(Spieler s) {
+        int numFront = ergebnis2vs2Repository.countByGewinnerVornOrGewinnerHinten(s, s);
+        int numAll = ergebnis2vs2Repository.countByGewinnerVornOrGewinnerHintenOrVerliererVornOrVerliererHinten(s, s, s, s);
+        return (float) numFront / numAll;
     }
 }
