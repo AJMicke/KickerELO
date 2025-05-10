@@ -52,7 +52,7 @@ public class Stat2vs2View extends VerticalLayout {
         String text = "Winrate vorne: ";
         Float winRate = stat2vs2Service.getWinrate(s, Position.FRONT);
         winRateFront.setValue(winRate);
-        winRateBack.removeThemeVariants(ProgressBarVariant.LUMO_SUCCESS, ProgressBarVariant.LUMO_ERROR);
+        winRateFront.removeThemeVariants(ProgressBarVariant.LUMO_SUCCESS, ProgressBarVariant.LUMO_ERROR);
         winRateFront.addThemeVariants((winRate > 0.5f ? ProgressBarVariant.LUMO_SUCCESS : ProgressBarVariant.LUMO_ERROR));
         winRateFrontText.setText(winRate.isNaN() ? text + "-" : text + String.format("%.2f", winRate * 100) + "%");
     }
