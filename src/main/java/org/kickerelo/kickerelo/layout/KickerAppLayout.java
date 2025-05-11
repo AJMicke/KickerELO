@@ -33,20 +33,22 @@ public class KickerAppLayout extends AppLayout {
 
         // Add login/logout button
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null && auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken)) {
-        Anchor logoutLink = new Anchor("/logout", "Logout (" + auth.getName() + ")");
-        logoutLink.getElement().getStyle()
-                .set("margin-left", "auto")
-                .set("margin-right", "10px")
-                .set("align-self", "center");
-        addToNavbar(logoutLink);
+        boolean isAuthenticated = auth != null && auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken);
+
+        if (isAuthenticated) {
+            Anchor logoutLink = new Anchor("/logout", "Logout (" + auth.getName() + ")");
+            logoutLink.getElement().getStyle()
+                    .set("margin-left", "auto")
+                    .set("margin-right", "10px")
+                    .set("align-self", "center");
+            addToNavbar(logoutLink);
         } else {
-        Anchor loginLink = new Anchor("/oauth2/authorization/oidc", "Login");
-        loginLink.getElement().getStyle()
-                .set("margin-left", "auto")
-                .set("margin-right", "10px")
-                .set("align-self", "center");
-        addToNavbar(loginLink);
+            Anchor loginLink = new Anchor("/oauth2/authorization/oidc", "Login");
+            loginLink.getElement().getStyle()
+                    .set("margin-left", "auto")
+                    .set("margin-right", "10px")
+                    .set("align-self", "center");
+            addToNavbar(loginLink);
         }
 
         SideNav general = new SideNav("Allgemein");
