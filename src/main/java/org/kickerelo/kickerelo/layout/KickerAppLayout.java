@@ -64,7 +64,8 @@ public class KickerAppLayout extends AppLayout {
         nav2.setCollapsible(true);
         nav2.addItem(new SideNavItem("Ergebnis eintragen", Enter2vs2View.class, VaadinIcon.EDIT.create()),
                 new SideNavItem("ELO-Graph", Graph2vs2View.class, VaadinIcon.BAR_CHART.create()),
-                new SideNavItem("Historie", History2vs2View.class, VaadinIcon.RECORDS.create()));
+                new SideNavItem("Historie", History2vs2View.class, VaadinIcon.RECORDS.create()),
+                new SideNavItem("Statistik", Stat2vs2View.class, VaadinIcon.ABACUS.create()));
 
 
         Image githubLogo = new Image("github-mark.png", "Github");
