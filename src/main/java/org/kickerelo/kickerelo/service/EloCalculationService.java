@@ -21,13 +21,13 @@ public class EloCalculationService {
     public void updateElo1vs1(Spieler gewinner, Spieler verlierer, short toreVerlierer) {
         final float baseK = 50;
         final float reductionPerGoal = 0.1f * baseK;
-
         final float finalK = baseK - (reductionPerGoal * toreVerlierer);
-        float expectedScoreWinner = (float) (1 / (1 + Math.pow(10, (verlierer.getElo1vs1() - gewinner.getElo1vs1()) / 400)));
-        float expectedScoreLoser = (float) (1 / (1 + Math.pow(10, (gewinner.getElo1vs1() - verlierer.getElo1vs1()) / 400)));
 
-        gewinner.setElo1vs1(gewinner.getElo1vs1() + finalK * (1-expectedScoreWinner));
-        verlierer.setElo1vs1(verlierer.getElo1vs1() - finalK * expectedScoreLoser);
+        double x = Math.pow(10, (verlierer.getElo1vs1() - gewinner.getElo1vs1()) / 400);
+        float eloChange = (float) (finalK * x / (x + 1));
+
+        gewinner.setElo1vs1(gewinner.getElo1vs1() + eloChange);
+        verlierer.setElo1vs1(verlierer.getElo1vs1() - eloChange);
     }
 
     /**
