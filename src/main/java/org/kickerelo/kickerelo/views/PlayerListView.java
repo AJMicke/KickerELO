@@ -11,7 +11,7 @@ import org.kickerelo.kickerelo.service.KickerEloService;
 
 import java.util.List;
 
-@Route("")
+@Route("app")
 public class PlayerListView extends VerticalLayout {
     public PlayerListView(KickerEloService eloService) {
         setSizeFull();

@@ -7,7 +7,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import org.kickerelo.kickerelo.repository.SpielerRepository;
 
-@Route("graph2vs2")
+@Route("app/graph2vs2")
 public class Graph2vs2View extends VerticalLayout {
     ApexCharts chart2vs2;
     public Graph2vs2View(SpielerRepository repo) {

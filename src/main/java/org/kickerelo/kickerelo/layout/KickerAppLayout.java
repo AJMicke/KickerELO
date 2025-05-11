@@ -67,6 +67,15 @@ public class KickerAppLayout extends AppLayout {
                 new SideNavItem("Historie", History2vs2View.class, VaadinIcon.RECORDS.create()),
                 new SideNavItem("Statistik", Stat2vs2View.class, VaadinIcon.ABACUS.create()));
 
+        // add additional nav item if user is logged in
+        if (isAuthenticated) {
+                SideNav nav3 = new SideNav("Admin");
+                nav3.setCollapsible(true);
+                nav3.addItem(new SideNavItem("Delete Internet", AdminView.class, VaadinIcon.COG.create()),
+                        new SideNavItem("Current User: " + auth.getName(), AdminView.class, VaadinIcon.COG.create()));
+
+}
+
 
         Image githubLogo = new Image("github-mark.png", "Github");
         githubLogo.setHeight("30px");

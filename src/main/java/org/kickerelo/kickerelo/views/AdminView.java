@@ -12,7 +12,7 @@ import org.kickerelo.kickerelo.exception.InvalidDataException;
 import org.kickerelo.kickerelo.exception.PlayerNameNotSetException;
 import org.kickerelo.kickerelo.service.KickerEloService;
 
-@Route("admin")
+@Route("app/admin")
 public class AdminView extends VerticalLayout {
     public AdminView(KickerEloService service) {
         H2 subheader = new H2("Verwaltung");

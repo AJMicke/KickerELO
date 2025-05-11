@@ -18,7 +18,7 @@ import org.kickerelo.kickerelo.repository.Ergebnis1vs1Repository;
 
 import java.util.List;
 
-@Route("history1vs1")
+@Route("app/history1vs1")
 public class History1vs1View extends VerticalLayout {
     List<Ergebnis1vs1> res;
     public History1vs1View(Ergebnis1vs1Repository repo) {
