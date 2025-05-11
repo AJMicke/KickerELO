@@ -19,7 +19,7 @@ import org.kickerelo.kickerelo.repository.Ergebnis2vs2Repository;
 
 import java.util.List;
 
-@Route("history2vs2")
+@Route("app/history2vs2")
 public class History2vs2View extends VerticalLayout {
     public History2vs2View(Ergebnis2vs2Repository repo) {
         setSizeFull();

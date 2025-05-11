@@ -14,7 +14,7 @@ import org.kickerelo.kickerelo.exception.NoSuchPlayerException;
 import org.kickerelo.kickerelo.exception.PlayerNameNotSetException;
 import org.kickerelo.kickerelo.service.KickerEloService;
 
-@Route(value = "enter1vs1")
+@Route(value = "app/enter1vs1")
 public class Enter1vs1View extends VerticalLayout {
 
     public Enter1vs1View(KickerEloService eloService) {

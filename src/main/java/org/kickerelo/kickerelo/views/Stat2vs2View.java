@@ -12,7 +12,7 @@ import org.kickerelo.kickerelo.service.KickerEloService;
 import org.kickerelo.kickerelo.service.Stat2vs2Service;
 import org.kickerelo.kickerelo.util.Position;
 
-@Route("stat2vs2")
+@Route("app/stat2vs2")
 public class Stat2vs2View extends VerticalLayout {
     Stat2vs2Service stat2vs2Service;
     KickerEloService kickerEloService;

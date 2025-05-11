@@ -14,6 +14,11 @@ import com.vaadin.flow.dom.Style;
 import com.vaadin.flow.router.Layout;
 import org.kickerelo.kickerelo.views.*;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+
+
 @Layout
 @JsModule("./prefers-color-scheme.js")
 public class KickerAppLayout extends AppLayout {
@@ -25,6 +30,26 @@ public class KickerAppLayout extends AppLayout {
         title.getStyle().set("font-size", "var(--lumo-font-size-l)").set("margin", "0");
 
         addToNavbar(drawerToggle, title);
+
+        // Add login/logout button
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAuthenticated = auth != null && auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken);
+
+        if (isAuthenticated) {
+            Anchor logoutLink = new Anchor("/logout", "Logout (" + auth.getName() + ")");
+            logoutLink.getElement().getStyle()
+                    .set("margin-left", "auto")
+                    .set("margin-right", "10px")
+                    .set("align-self", "center");
+            addToNavbar(logoutLink);
+        } else {
+            Anchor loginLink = new Anchor("/oauth2/authorization/oidc", "Login");
+            loginLink.getElement().getStyle()
+                    .set("margin-left", "auto")
+                    .set("margin-right", "10px")
+                    .set("align-self", "center");
+            addToNavbar(loginLink);
+        }
 
         SideNav general = new SideNav("Allgemein");
         general.setCollapsible(true);
@@ -41,6 +66,15 @@ public class KickerAppLayout extends AppLayout {
                 new SideNavItem("ELO-Graph", Graph2vs2View.class, VaadinIcon.BAR_CHART.create()),
                 new SideNavItem("Historie", History2vs2View.class, VaadinIcon.RECORDS.create()),
                 new SideNavItem("Statistik", Stat2vs2View.class, VaadinIcon.ABACUS.create()));
+
+        // add additional nav item if user is logged in
+        if (isAuthenticated) {
+                SideNav nav3 = new SideNav("Admin");
+                nav3.setCollapsible(true);
+                nav3.addItem(new SideNavItem("Delete Internet", AdminView.class, VaadinIcon.COG.create()),
+                        new SideNavItem("Current User: " + auth.getName(), AdminView.class, VaadinIcon.COG.create()));
+
+}
 
 
         Image githubLogo = new Image("github-mark.png", "Github");

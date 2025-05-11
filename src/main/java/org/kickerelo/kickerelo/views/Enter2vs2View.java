@@ -14,7 +14,7 @@ import org.kickerelo.kickerelo.exception.NoSuchPlayerException;
 import org.kickerelo.kickerelo.exception.PlayerNameNotSetException;
 import org.kickerelo.kickerelo.service.KickerEloService;
 
-@Route(value = "enter2vs2")
+@Route(value = "app/enter2vs2")
 public class Enter2vs2View extends VerticalLayout {
     public Enter2vs2View(KickerEloService eloService) {
         H2 subheading = new H2("2 vs 2 Ergebnis");

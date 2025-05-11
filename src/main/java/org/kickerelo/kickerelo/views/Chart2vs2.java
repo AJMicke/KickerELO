@@ -12,11 +12,14 @@ import com.github.appreciated.apexcharts.config.theme.Mode;
 import com.github.appreciated.apexcharts.config.theme.Monochrome;
 import com.github.appreciated.apexcharts.config.xaxis.Labels;
 import com.github.appreciated.apexcharts.helper.Series;
+import com.vaadin.flow.router.Route;
+
 import org.kickerelo.kickerelo.data.Spieler;
 import org.kickerelo.kickerelo.util.Spieler2vs2EloComparator;
 
 import java.util.List;
 
+@Route(value = "app/chart1vs1")
 public class Chart2vs2 extends ApexChartsBuilder {
     public Chart2vs2(List<Spieler> l) {
         Theme theme = new Theme();
