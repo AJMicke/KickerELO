@@ -17,8 +17,8 @@ public class Graph2vs2View extends VerticalLayout {
         setSizeFull();
         H2 subheading = new H2("2 vs 2 Elo");
 
-        List<String> names = new ArrayList();
-        List<Float> elo = new ArrayList();
+        List<String> names = new ArrayList<>();
+        List<Float> elo = new ArrayList<>();
 
         repo.getSpielerWith2vs2Games().stream().sorted(new Spieler2vs2EloComparator()).forEach((s) -> {names.add(s.getName()); elo.add(s.getElo2vs2());});
 

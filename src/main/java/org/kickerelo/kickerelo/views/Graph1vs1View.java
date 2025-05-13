@@ -17,8 +17,8 @@ public class Graph1vs1View extends VerticalLayout {
         setSizeFull();
         H2 subheading = new H2("1 vs 1 Elo");
 
-        List<String> names = new ArrayList();
-        List<Float> elo = new ArrayList();
+        List<String> names = new ArrayList<>();
+        List<Float> elo = new ArrayList<>();
 
         repo.getSpielerWith1vs1Games().stream().sorted(new Spieler1vs1EloComparator()).forEach((s) -> {names.add(s.getName()); elo.add(s.getElo1vs1());});
 

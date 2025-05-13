@@ -12,7 +12,7 @@ import org.json.JSONArray;
 @Tag("canvas")
 public class Chart extends Component {
 
-    private Element script = new Element("script");
+    private final Element script = new Element("script");
 
     public Chart(List<String> xvalues, List<Float> yvalues) {
         setId("chart");
@@ -38,7 +38,7 @@ public class Chart extends Component {
         js += "options: {showLine: false, pointRadius: 7, plugins: { legend: { display: false}}, layout: { padding: 10}}, ";
 
         // Data
-        js += "data: { labels: " + x.toString() + ", datasets:[{data: " + y.toString() + ", ";
+        js += "data: { labels: " + x + ", datasets:[{data: " + y + ", ";
         js += "borderColor: 'hsl(214, 90%, 48%)', backgroundColor: 'hsl(214, 90%, 77%)'}]}});";
 
         script.setText(js);
