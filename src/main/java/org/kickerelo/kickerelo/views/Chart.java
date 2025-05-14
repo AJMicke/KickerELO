@@ -5,14 +5,11 @@ import java.util.List;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Tag;
-import com.vaadin.flow.dom.Element;
 
 import org.json.JSONArray;
 
 @Tag("canvas")
 public class Chart extends Component {
-
-    private final Element script = new Element("script");
 
     public Chart(List<String> xvalues, List<Float> yvalues) {
         setId("chart");
@@ -41,9 +38,8 @@ public class Chart extends Component {
         js += "data: { labels: " + x + ", datasets:[{data: " + y + ", ";
         js += "borderColor: 'hsl(214, 90%, 48%)', backgroundColor: 'hsl(214, 90%, 77%)'}]}});";
 
-        script.setText(js);
+        getElement().executeJs(js);
 
-        getElement().appendChild(script);
     }
 
 }
