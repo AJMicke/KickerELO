@@ -35,7 +35,7 @@ public class Stat2vs2Service {
     }
 
     public Float getFrontRate(Spieler s) {
-        int numFront = ergebnis2vs2Repository.countByGewinnerVornOrGewinnerHinten(s, s);
+        int numFront = ergebnis2vs2Repository.countByGewinnerVornOrVerliererVorn(s, s);
         int numAll = ergebnis2vs2Repository.countByGewinnerVornOrGewinnerHintenOrVerliererVornOrVerliererHinten(s, s, s, s);
         return (float) numFront / numAll;
     }
