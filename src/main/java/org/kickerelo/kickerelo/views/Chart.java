@@ -30,6 +30,10 @@ public class Chart extends Component {
         // Font size
         js += "Chart.defaults.font.size = 16;";
 
+        // Scales
+        js += "Chart.defaults.scales.category.ticks.autoSkip = false;";
+        js += "Chart.defaults.scales.category.offset = true;";
+
         // Chart
         js += "new Chart(document.getElementById('chart'), {type: 'line', ";
         js += "options: {showLine: false, pointRadius: 7, plugins: { legend: { display: false}}, layout: { padding: 10}}, ";
