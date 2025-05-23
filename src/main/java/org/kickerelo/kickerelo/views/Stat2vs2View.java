@@ -3,11 +3,13 @@ package org.kickerelo.kickerelo.views;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.NativeLabel;
+import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.progressbar.ProgressBar;
 import com.vaadin.flow.component.progressbar.ProgressBarVariant;
 import com.vaadin.flow.router.Route;
 import org.kickerelo.kickerelo.data.Spieler;
+import org.kickerelo.kickerelo.repository.Ergebnis2vs2Repository;
 import org.kickerelo.kickerelo.service.KickerEloService;
 import org.kickerelo.kickerelo.service.Stat2vs2Service;
 import org.kickerelo.kickerelo.util.Position;
@@ -16,8 +18,10 @@ import org.kickerelo.kickerelo.util.Position;
 public class Stat2vs2View extends VerticalLayout {
     Stat2vs2Service stat2vs2Service;
     KickerEloService kickerEloService;
+    Ergebnis2vs2Repository repo;
     H2 subheading;
     ComboBox<Spieler> selector;
+    Paragraph generalInfo = new Paragraph();
     ProgressBar frontRate = new ProgressBar();
     NativeLabel frontRateText = new NativeLabel();
     ProgressBar winRateFront = new ProgressBar();
@@ -25,20 +29,29 @@ public class Stat2vs2View extends VerticalLayout {
     ProgressBar winRateBack = new ProgressBar();
     NativeLabel winRateBackText = new NativeLabel();
 
-    public Stat2vs2View(Stat2vs2Service service, KickerEloService kickerService) {
+    public Stat2vs2View(Stat2vs2Service service, KickerEloService kickerService, Ergebnis2vs2Repository repo) {
         this.stat2vs2Service = service;
         this.kickerEloService = kickerService;
-        subheading = new H2("2 vs 2 Ergebnis");
+        this.repo = repo;
+        subheading = new H2("2 vs 2 Spielerstatistik");
         selector = new ComboBox<>("Spieler");
         selector.setItems(kickerService.getSpielerEntities());
         selector.addValueChangeListener(event -> updateData(selector.getValue()));
-        add(subheading, selector, frontRateText, frontRate, winRateFrontText, winRateFront, winRateBackText, winRateBack);
+        add(subheading, selector, generalInfo, frontRateText, frontRate, winRateFrontText, winRateFront, winRateBackText, winRateBack);
     }
 
     private void updateData(Spieler s) {
+        updateGeneralInfo(s);
         updateFrontRate(s);
         updateFrontWinrate(s);
         updateBackWinrate(s);
+    }
+
+    private void updateGeneralInfo(Spieler s) {
+        int anzahl = repo.countByGewinnerVornOrGewinnerHintenOrVerliererVornOrVerliererHinten(s, s, s, s);
+        float elo = s.getElo2vs2();
+        String text = String.format("%.2f", elo) + " Elo bei " + anzahl + " Spielen";
+        generalInfo.setText(text);
     }
 
     private void updateFrontRate(Spieler s) {
