@@ -12,7 +12,7 @@ import org.kickerelo.kickerelo.repository.Ergebnis2vs2Repository;
 import org.kickerelo.kickerelo.repository.SpielerRepository;
 import org.kickerelo.kickerelo.util.Ergebnis1vs1TimeComparator;
 import org.kickerelo.kickerelo.util.Ergebnis2vs2TimeComparator;
-import org.kickerelo.kickerelo.util.Spieler1vs1EloComparator;
+import org.kickerelo.kickerelo.util.SpielerNameComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +45,7 @@ public class KickerEloService {
      * @return List of all player entities sorted by 1 vs 1 ELO
      */
     public List<Spieler> getSpielerEntities() {
-        return spielerRepository.findAll().stream().sorted(new Spieler1vs1EloComparator()).toList();
+        return spielerRepository.findAll().stream().sorted(new SpielerNameComparator()).toList();
     }
 
     /**
