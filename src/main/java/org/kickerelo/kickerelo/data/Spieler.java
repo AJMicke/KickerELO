@@ -69,4 +69,10 @@ public class Spieler {
     public String toString() {
         return this.name;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Spieler)) return false;
+        return this.id == ((Spieler) o).id;
+    }
 }
