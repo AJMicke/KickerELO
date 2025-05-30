@@ -10,18 +10,30 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.SortDirection;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.LocalDateTimeRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 import org.kickerelo.kickerelo.data.Ergebnis1vs1;
 import org.kickerelo.kickerelo.repository.Ergebnis1vs1Repository;
+import org.kickerelo.kickerelo.repository.Ergebnis2vs2Repository;
+import org.kickerelo.kickerelo.service.EloChangeService;
 
 import java.util.List;
 
+import static org.kickerelo.kickerelo.views.HistoryCommonView.formatEloChange;
+
 @Route("history1vs1")
 public class History1vs1View extends VerticalLayout {
+
+    private final Ergebnis1vs1Repository repo;
+    private final EloChangeService eloChangeService;
+
     List<Ergebnis1vs1> res;
-    public History1vs1View(Ergebnis1vs1Repository repo) {
+    public History1vs1View(Ergebnis1vs1Repository repo, EloChangeService eloChangeService) {
+        this.repo = repo;
+        this.eloChangeService = eloChangeService;
+
         setSizeFull();
         H2 subheading = new H2("Spiele 1 vs 1");
         res = repo.findAll();
@@ -49,8 +61,10 @@ public class History1vs1View extends VerticalLayout {
         grid.removeColumnByKey("id");
         Grid.Column<Ergebnis1vs1> winnerColumn = grid.getColumnByKey("gewinner");
         winnerColumn.setHeader("Gewinner");
+        winnerColumn.setRenderer(new ComponentRenderer<>(ergebnis -> formatEloChange(ergebnis.getGewinner(), eloChangeService.get1vs1Result(ergebnis.getId()).winnerEloChange())));
         Grid.Column<Ergebnis1vs1> loserColumn = grid.getColumnByKey("verlierer");
         loserColumn.setHeader("Verlierer");
+        loserColumn.setRenderer(new ComponentRenderer<>(ergebnis -> formatEloChange(ergebnis.getVerlierer(), eloChangeService.get1vs1Result(ergebnis.getId()).loserEloChange())));
         Grid.Column<Ergebnis1vs1> goals = grid.getColumnByKey("toreVerlierer");
         goals.setHeader("Verlierertore");
         Grid.Column<Ergebnis1vs1> timestamp = grid.getColumnByKey("timestamp");
