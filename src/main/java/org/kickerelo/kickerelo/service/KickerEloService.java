@@ -2,7 +2,6 @@ package org.kickerelo.kickerelo.service;
 
 import org.kickerelo.kickerelo.exception.DuplicatePlayerException;
 import org.kickerelo.kickerelo.exception.InvalidDataException;
-import org.kickerelo.kickerelo.exception.NoSuchPlayerException;
 import org.kickerelo.kickerelo.data.Ergebnis1vs1;
 import org.kickerelo.kickerelo.data.Ergebnis2vs2;
 import org.kickerelo.kickerelo.data.Spieler;
@@ -50,30 +49,23 @@ public class KickerEloService {
 
     /**
      * Enter a result of a 1 vs 1 game
-     * @param gewinnerName The name of the winning player
-     * @param verliererName The name of the losing player
+     * @param gewinner The winning player
+     * @param verlierer The losing player
      * @param toreVerlierer The number of goals of the loser
      */
-    public void enterResult1vs1(String gewinnerName, String verliererName,
+    public void enterResult1vs1(Spieler gewinner, Spieler verlierer,
                                 short toreVerlierer) {
         // Check if the inputs are valid
-        if (gewinnerName == null || verliererName == null) {
+        if (gewinner == null || verlierer == null) {
             throw new PlayerNameNotSetException("Alle Namen müssen gesetzt sein");
         }
 
-        if (gewinnerName.equals(verliererName)) {
+        if (gewinner.equals(verlierer)) {
             throw new DuplicatePlayerException("winner and loser identical");
         }
         if (toreVerlierer > 9 || toreVerlierer < 0) {
             throw new InvalidDataException("too many goals");
         }
-
-        Spieler gewinner = spielerRepository.findByName(gewinnerName)
-                .orElseThrow(() -> new NoSuchPlayerException(gewinnerName));
-
-        Spieler verlierer = spielerRepository.findByName(verliererName)
-                .orElseThrow(() -> new NoSuchPlayerException(verliererName));
-
 
         Ergebnis1vs1 ergebnis = new Ergebnis1vs1(gewinner, verlierer, toreVerlierer);
         ergebnis1vs1Repository.save(ergebnis);
@@ -81,50 +73,37 @@ public class KickerEloService {
         eloCalculationService.updateElo1vs1(gewinner, verlierer, toreVerlierer);
         spielerRepository.save(gewinner);
         spielerRepository.save(verlierer);
-
     }
 
     /**
      * Enter the result of a 2 vs 2 game
-     * @param gewinnerNameVorn Name of the winning offensive player
-     * @param gewinnerNameHinten Name of the winning defensive player
-     * @param verliererNameVorn Name of the losing offensive player
-     * @param verliererNameHinten Name of the losing defensive player
+     * @param gewinnerVorn winning offensive player
+     * @param gewinnerHinten winning defensive player
+     * @param verliererVorn losing offensive player
+     * @param verliererHinten losing defensive player
      * @param toreVerlierer Number of goals of the losing team
      */
-    public void enterResult2vs2(String gewinnerNameVorn, String gewinnerNameHinten,
-                                String verliererNameVorn, String verliererNameHinten,
+    public void enterResult2vs2(Spieler gewinnerVorn, Spieler gewinnerHinten,
+                                Spieler verliererVorn, Spieler verliererHinten,
                                 short toreVerlierer) {
         // Check if the inputs are valid
-        if (gewinnerNameVorn == null || gewinnerNameHinten == null
-            || verliererNameVorn == null || verliererNameHinten == null) {
+        if (gewinnerVorn == null || gewinnerHinten == null
+            || verliererVorn == null || verliererHinten == null) {
             throw new PlayerNameNotSetException("Alle Namen müssen gesetzt sein");
         }
 
-        if (gewinnerNameVorn.equals(gewinnerNameHinten) ||
-            gewinnerNameVorn.equals(verliererNameVorn) ||
-            gewinnerNameVorn.equals(verliererNameHinten) ||
-            gewinnerNameHinten.equals(verliererNameVorn) ||
-            gewinnerNameHinten.equals(verliererNameHinten) ||
-            verliererNameVorn.equals(verliererNameHinten)) {
+        if (gewinnerVorn.equals(gewinnerHinten) ||
+            gewinnerVorn.equals(verliererVorn) ||
+            gewinnerVorn.equals(verliererHinten) ||
+            gewinnerHinten.equals(verliererVorn) ||
+            gewinnerHinten.equals(verliererHinten) ||
+            verliererVorn.equals(verliererHinten)) {
             throw new DuplicatePlayerException("players must not be identical");
         }
 
         if (toreVerlierer > 9 || toreVerlierer < 0) {
             throw new InvalidDataException("too many loser goals");
         }
-
-        Spieler gewinnerVorn = spielerRepository.findByName(gewinnerNameVorn)
-                .orElseThrow(() -> new NoSuchPlayerException(gewinnerNameVorn));
-
-        Spieler gewinnerHinten = spielerRepository.findByName(gewinnerNameHinten)
-                .orElseThrow(() -> new NoSuchPlayerException(gewinnerNameHinten));
-
-        Spieler verliererVorn = spielerRepository.findByName(verliererNameVorn)
-                .orElseThrow(() -> new NoSuchPlayerException(verliererNameVorn));
-
-        Spieler verliererHinten = spielerRepository.findByName(verliererNameHinten)
-                .orElseThrow(() -> new NoSuchPlayerException(verliererNameHinten));
 
         Ergebnis2vs2 ergebnis = new Ergebnis2vs2(gewinnerVorn, gewinnerHinten, verliererVorn, verliererHinten, toreVerlierer);
         ergebnis2vs2Repository.save(ergebnis);
