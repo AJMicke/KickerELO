@@ -8,7 +8,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 
 import org.kickerelo.kickerelo.repository.SpielerRepository;
-import org.kickerelo.kickerelo.util.Spieler2vs2EloComparator;
+import org.kickerelo.kickerelo.util.comparator.Spieler2vs2EloComparator;
 
 @Route("graph2vs2")
 public class Graph2vs2View extends VerticalLayout {
