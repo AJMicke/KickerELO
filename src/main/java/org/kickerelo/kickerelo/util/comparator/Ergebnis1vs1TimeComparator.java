@@ -1,4 +1,4 @@
-package org.kickerelo.kickerelo.util;
+package org.kickerelo.kickerelo.util.comparator;
 
 import org.kickerelo.kickerelo.data.Ergebnis1vs1;
 

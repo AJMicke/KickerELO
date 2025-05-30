@@ -9,10 +9,11 @@ import org.kickerelo.kickerelo.exception.PlayerNameNotSetException;
 import org.kickerelo.kickerelo.repository.Ergebnis1vs1Repository;
 import org.kickerelo.kickerelo.repository.Ergebnis2vs2Repository;
 import org.kickerelo.kickerelo.repository.SpielerRepository;
-import org.kickerelo.kickerelo.util.Ergebnis1vs1TimeComparator;
-import org.kickerelo.kickerelo.util.Ergebnis2vs2TimeComparator;
-import org.kickerelo.kickerelo.util.SpielerNameComparator;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.kickerelo.kickerelo.util.EloChange1vs1;
+import org.kickerelo.kickerelo.util.EloChange2vs2;
+import org.kickerelo.kickerelo.util.comparator.Ergebnis1vs1TimeComparator;
+import org.kickerelo.kickerelo.util.comparator.Ergebnis2vs2TimeComparator;
+import org.kickerelo.kickerelo.util.comparator.SpielerNameComparator;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -24,10 +25,10 @@ import java.util.stream.Stream;
  */
 @Service
 public class KickerEloService {
-    private Ergebnis1vs1Repository ergebnis1vs1Repository;
-    private Ergebnis2vs2Repository ergebnis2vs2Repository;
-    private SpielerRepository spielerRepository;
-    private EloCalculationService eloCalculationService;
+    private final Ergebnis1vs1Repository ergebnis1vs1Repository;
+    private final Ergebnis2vs2Repository ergebnis2vs2Repository;
+    private final SpielerRepository spielerRepository;
+    private final EloCalculationService eloCalculationService;
 
     public KickerEloService(Ergebnis1vs1Repository ergebnis1vs1Repository,
                             Ergebnis2vs2Repository ergebnis2vs2Repository,
@@ -76,9 +77,10 @@ public class KickerEloService {
         }
 
         Ergebnis1vs1 ergebnis = new Ergebnis1vs1(gewinner, verlierer, toreVerlierer);
-        ergebnis1vs1Repository.save(ergebnis);
+        ergebnis = ergebnis1vs1Repository.save(ergebnis);
 
-        eloCalculationService.updateElo1vs1(ergebnis.getId(), gewinner, verlierer, toreVerlierer);
+        EloChange1vs1 change = eloCalculationService.updateElo1vs1(gewinner, verlierer, toreVerlierer);
+        EloChangeTracker.put1vs1Result(ergebnis.getId(), change);
         spielerRepository.save(gewinner);
         spielerRepository.save(verlierer);
     }
@@ -114,9 +116,10 @@ public class KickerEloService {
         }
 
         Ergebnis2vs2 ergebnis = new Ergebnis2vs2(gewinnerVorn, gewinnerHinten, verliererVorn, verliererHinten, toreVerlierer);
-        ergebnis2vs2Repository.save(ergebnis);
+        ergebnis = ergebnis2vs2Repository.save(ergebnis);
 
-        eloCalculationService.updateElo2vs2(ergebnis.getId(), gewinnerVorn, gewinnerHinten, verliererVorn, verliererHinten, toreVerlierer);
+        EloChange2vs2 change = eloCalculationService.updateElo2vs2(gewinnerVorn, gewinnerHinten, verliererVorn, verliererHinten, toreVerlierer);
+        EloChangeTracker.put2vs2Result(ergebnis.getId(), change);
         spielerRepository.save(gewinnerVorn);
         spielerRepository.save(gewinnerHinten);
         spielerRepository.save(verliererVorn);
@@ -156,10 +159,10 @@ public class KickerEloService {
         }
         Stream<Ergebnis1vs1> results = ergebnis1vs1Repository.findAll().stream().sorted(new Ergebnis1vs1TimeComparator());
         results.forEach(r -> {
-            eloCalculationService.updateElo1vs1(r.getId(),
-                                                players.get(r.getGewinner().getId()),
-                                                players.get(r.getVerlierer().getId()),
-                                                r.getToreVerlierer());
+            EloChange1vs1 c = eloCalculationService.updateElo1vs1(players.get(r.getGewinner().getId()),
+                                                                  players.get(r.getVerlierer().getId()),
+                                                                  r.getToreVerlierer());
+            EloChangeTracker.put1vs1Result(r.getId(), c);
         });
         spielerRepository.saveAll(players.values());
     }
@@ -175,12 +178,12 @@ public class KickerEloService {
         }
         Stream<Ergebnis2vs2> results = ergebnis2vs2Repository.findAll().stream().sorted(new Ergebnis2vs2TimeComparator());
         results.forEach(r -> {
-            eloCalculationService.updateElo2vs2(r.getId(),
-                                                players.get(r.getGewinnerVorn().getId()),
-                                                players.get(r.getGewinnerHinten().getId()),
-                                                players.get(r.getVerliererVorn().getId()),
-                                                players.get(r.getVerliererHinten().getId()),
-                                                r.getToreVerlierer());
+            EloChange2vs2 c = eloCalculationService.updateElo2vs2(players.get(r.getGewinnerVorn().getId()),
+                                                                  players.get(r.getGewinnerHinten().getId()),
+                                                                  players.get(r.getVerliererVorn().getId()),
+                                                                  players.get(r.getVerliererHinten().getId()),
+                                                                  r.getToreVerlierer());
+            EloChangeTracker.put2vs2Result(r.getId(), c);
         });
         spielerRepository.saveAll(players.values());
     }
