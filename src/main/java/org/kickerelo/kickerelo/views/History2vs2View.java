@@ -11,17 +11,27 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.SortDirection;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.LocalDateTimeRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 import org.kickerelo.kickerelo.data.Ergebnis2vs2;
 import org.kickerelo.kickerelo.repository.Ergebnis2vs2Repository;
+import org.kickerelo.kickerelo.service.EloChangeService;
 
 import java.util.List;
 
+import static org.kickerelo.kickerelo.views.HistoryCommonView.formatEloChange;
+
 @Route("history2vs2")
 public class History2vs2View extends VerticalLayout {
-    public History2vs2View(Ergebnis2vs2Repository repo) {
+
+    private final Ergebnis2vs2Repository repo;
+    private final EloChangeService eloChangeService;
+
+    public History2vs2View(Ergebnis2vs2Repository repo, EloChangeService eloChangeService) {
+        this.repo = repo;
+        this.eloChangeService = eloChangeService;
         setSizeFull();
         H2 subheading = new H2("Spiele 2 vs 2");
         List<Ergebnis2vs2> res = repo.findAll();
@@ -63,12 +73,16 @@ public class History2vs2View extends VerticalLayout {
         grid.removeColumnByKey("id");
         Grid.Column<Ergebnis2vs2> winnerFront = grid.getColumnByKey("gewinnerVorn");
         winnerFront.setHeader("Gewinner vorne");
+        winnerFront.setRenderer(new ComponentRenderer<>(ergebnis -> formatEloChange(ergebnis.getGewinnerVorn(), eloChangeService.get2vs2Result(ergebnis.getId()).winnerFrontEloChange())));
         Grid.Column<Ergebnis2vs2> winnerBack = grid.getColumnByKey("gewinnerHinten");
         winnerBack.setHeader("Gewinner hinten");
+        winnerBack.setRenderer(new ComponentRenderer<>(ergebnis -> formatEloChange(ergebnis.getGewinnerHinten(), eloChangeService.get2vs2Result(ergebnis.getId()).winnerBackEloChange())));
         Grid.Column<Ergebnis2vs2> loserFront = grid.getColumnByKey("verliererVorn");
         loserFront.setHeader("Verlierer vorne");
+        loserFront.setRenderer(new ComponentRenderer<>(ergebnis -> formatEloChange(ergebnis.getVerliererVorn(), eloChangeService.get2vs2Result(ergebnis.getId()).loserFrontEloChange())));
         Grid.Column<Ergebnis2vs2> loserBack = grid.getColumnByKey("verliererHinten");
         loserBack.setHeader("Verlierer hinten");
+        loserBack.setRenderer(new ComponentRenderer<>(ergebnis -> formatEloChange(ergebnis.getVerliererHinten(), eloChangeService.get2vs2Result(ergebnis.getId()).loserBackEloChange())));
         Grid.Column<Ergebnis2vs2> goals = grid.getColumnByKey("toreVerlierer");
         goals.setHeader("Verlierertore");
         Grid.Column<Ergebnis2vs2> timestamp = grid.getColumnByKey("timestamp");
