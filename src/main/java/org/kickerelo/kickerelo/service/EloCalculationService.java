@@ -50,15 +50,10 @@ public class EloCalculationService {
         var eloDifference = totalWinnerElo - totalLoserElo;
         var winnerProbability = 1 / (1 + Math.pow(10, -eloDifference / 500));
 
-        var winner1Contribution = gewinnerVorn.getElo2vs2() / totalWinnerElo;
-        var winner2Contribution = gewinnerHinten.getElo2vs2() / totalWinnerElo;
-        var loser1Contribution = verliererVorn.getElo2vs2() / totalLoserElo;
-        var loser2Contribution = verliererHinten.getElo2vs2() / totalLoserElo;
-
-        var winner1EloChange = adjustedK * winner1Contribution * (1 - winnerProbability);
-        var winner2EloChange = adjustedK * winner2Contribution * (1 - winnerProbability);
-        var loser1EloChange = adjustedK * loser1Contribution * (0 - (1 - winnerProbability));
-        var loser2EloChange = adjustedK * loser2Contribution * (0 - (1 - winnerProbability));
+        var winner1EloChange = adjustedK * 0.5 * (1 - winnerProbability);
+        var winner2EloChange = adjustedK * 0.5 * (1 - winnerProbability);
+        var loser1EloChange = adjustedK * 0.5 * (0 - (1 - winnerProbability));
+        var loser2EloChange = adjustedK * 0.5 * (0 - (1 - winnerProbability));
 
         gewinnerVorn.setElo2vs2((float) (gewinnerVorn.getElo2vs2() + winner1EloChange));
         gewinnerHinten.setElo2vs2((float) (gewinnerHinten.getElo2vs2() + winner2EloChange));
