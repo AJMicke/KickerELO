@@ -28,6 +28,8 @@ public class Stat2vs2View extends VerticalLayout {
     NativeLabel winRateFrontText = new NativeLabel();
     ProgressBar winRateBack = new ProgressBar();
     NativeLabel winRateBackText = new NativeLabel();
+    Paragraph goalDiffBack = new Paragraph();
+    Paragraph goalDiffFront = new Paragraph();
 
     public Stat2vs2View(Stat2vs2Service service, KickerEloService kickerService, Ergebnis2vs2Repository repo) {
         this.stat2vs2Service = service;
@@ -37,7 +39,7 @@ public class Stat2vs2View extends VerticalLayout {
         selector = new ComboBox<>("Spieler");
         selector.setItems(kickerService.getSpielerEntities());
         selector.addValueChangeListener(event -> updateData(selector.getValue()));
-        add(subheading, selector, generalInfo, frontRateText, frontRate, winRateFrontText, winRateFront, winRateBackText, winRateBack);
+        add(subheading, selector, generalInfo, frontRateText, frontRate, winRateFrontText, winRateFront, winRateBackText, winRateBack, goalDiffBack, goalDiffFront);
     }
 
     private void updateData(Spieler s) {
@@ -45,6 +47,7 @@ public class Stat2vs2View extends VerticalLayout {
         updateFrontRate(s);
         updateFrontWinrate(s);
         updateBackWinrate(s);
+        updateGoalDiffs(s);
     }
 
     private void updateGeneralInfo(Spieler s) {
@@ -77,5 +80,15 @@ public class Stat2vs2View extends VerticalLayout {
         winRateBack.removeThemeVariants(ProgressBarVariant.LUMO_SUCCESS, ProgressBarVariant.LUMO_ERROR);
         winRateBack.addThemeVariants((winRate > 0.5f ? ProgressBarVariant.LUMO_SUCCESS : ProgressBarVariant.LUMO_ERROR));
         winRateBackText.setText(winRate.isNaN() ? text + "-" : text + String.format("%.2f", winRate * 100) + "%");
+    }
+
+    private void updateGoalDiffs(Spieler s) {
+        String text = "Mittlere Tordifferenz hinten: ";
+        Float backDiff = repo.avgGoalDiffBack(s);
+        goalDiffBack.setText(backDiff.isNaN() ? text + "-" : text + String.format("%.2f", backDiff));
+        text = "Mittlere Tordifferenz vorne: ";
+        Float frontDiff = repo.avgGoalDiffFront(s);
+        goalDiffFront.setText(frontDiff.isNaN() ? text + "-" : text + String.format("%.2f", frontDiff));
+
     }
 }
