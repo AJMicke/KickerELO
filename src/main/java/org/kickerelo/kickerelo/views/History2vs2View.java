@@ -13,16 +13,21 @@ import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.SortDirection;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.LocalDateTimeRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 
+
 @Route("app/history2vs2")
-public class History2vs2View extends VerticalLayout {
+public class History2vs2View extends HistoryView {
+
+    private final Ergebnis2vs2Repository repo;
+
     public History2vs2View(Ergebnis2vs2Repository repo) {
+        this.repo = repo;
         setSizeFull();
         H2 subheading = new H2("Spiele 2 vs 2");
         List<Ergebnis2vs2> res = repo.findAll();
@@ -64,12 +69,16 @@ public class History2vs2View extends VerticalLayout {
         grid.removeColumnByKey("id");
         Grid.Column<Ergebnis2vs2> winnerFront = grid.getColumnByKey("gewinnerVorn");
         winnerFront.setHeader("Gewinner vorne");
+        winnerFront.setRenderer(new ComponentRenderer<>(ergebnis -> formatEloChange(ergebnis, PlayerType2vs2.GEWINNER_VORN)));
         Grid.Column<Ergebnis2vs2> winnerBack = grid.getColumnByKey("gewinnerHinten");
         winnerBack.setHeader("Gewinner hinten");
+        winnerBack.setRenderer(new ComponentRenderer<>(ergebnis -> formatEloChange(ergebnis, PlayerType2vs2.GEWINNER_HINTEN)));
         Grid.Column<Ergebnis2vs2> loserFront = grid.getColumnByKey("verliererVorn");
         loserFront.setHeader("Verlierer vorne");
+        loserFront.setRenderer(new ComponentRenderer<>(ergebnis -> formatEloChange(ergebnis, PlayerType2vs2.VERLIERER_VORN)));
         Grid.Column<Ergebnis2vs2> loserBack = grid.getColumnByKey("verliererHinten");
         loserBack.setHeader("Verlierer hinten");
+        loserBack.setRenderer(new ComponentRenderer<>(ergebnis -> formatEloChange(ergebnis, PlayerType2vs2.VERLIERER_HINTEN)));
         Grid.Column<Ergebnis2vs2> goals = grid.getColumnByKey("toreVerlierer");
         goals.setHeader("Verlierertore");
         Grid.Column<Ergebnis2vs2> timestamp = grid.getColumnByKey("timestamp");

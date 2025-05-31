@@ -12,17 +12,22 @@ import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.SortDirection;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.LocalDateTimeRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 
 @Route("app/history1vs1")
-public class History1vs1View extends VerticalLayout {
+public class History1vs1View extends HistoryView {
+
+    private final Ergebnis1vs1Repository repo;
+
     List<Ergebnis1vs1> res;
     public History1vs1View(Ergebnis1vs1Repository repo) {
+        this.repo = repo;
+
         setSizeFull();
         H2 subheading = new H2("Spiele 1 vs 1");
         res = repo.findAll();
@@ -50,8 +55,10 @@ public class History1vs1View extends VerticalLayout {
         grid.removeColumnByKey("id");
         Grid.Column<Ergebnis1vs1> winnerColumn = grid.getColumnByKey("gewinner");
         winnerColumn.setHeader("Gewinner");
+        winnerColumn.setRenderer(new ComponentRenderer<>(ergebnis -> formatEloChange(ergebnis, PlayerType1vs1.GEWINNER)));
         Grid.Column<Ergebnis1vs1> loserColumn = grid.getColumnByKey("verlierer");
         loserColumn.setHeader("Verlierer");
+        loserColumn.setRenderer(new ComponentRenderer<>(ergebnis -> formatEloChange(ergebnis, PlayerType1vs1.VERLIERER)));
         Grid.Column<Ergebnis1vs1> goals = grid.getColumnByKey("toreVerlierer");
         goals.setHeader("Verlierertore");
         Grid.Column<Ergebnis1vs1> timestamp = grid.getColumnByKey("timestamp");

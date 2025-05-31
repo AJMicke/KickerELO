@@ -4,6 +4,7 @@ target/
 !**/src/test/**/target/
 data.mv.db
 src/main/bundles
+node_modules
 
 # for secrets
 .env

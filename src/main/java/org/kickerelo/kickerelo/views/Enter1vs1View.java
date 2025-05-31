@@ -1,5 +1,6 @@
 package org.kickerelo.kickerelo.views;
 
+import org.kickerelo.kickerelo.data.Spieler;
 import org.kickerelo.kickerelo.exception.DuplicatePlayerException;
 import org.kickerelo.kickerelo.exception.InvalidDataException;
 import org.kickerelo.kickerelo.exception.NoSuchPlayerException;
@@ -21,12 +22,12 @@ public class Enter1vs1View extends VerticalLayout {
     public Enter1vs1View(KickerEloService eloService) {
         H2 subheading = new H2("1 vs 1 Ergebnis");
 
-        ComboBox<String> winnerSelect = new ComboBox<>("Gewinner");
-        winnerSelect.setItems(eloService.getSpielerNamen());
+        ComboBox<Spieler> winnerSelect = new ComboBox<>("Gewinner");
+        winnerSelect.setItems(eloService.getSpielerEntities());
         winnerSelect.setPlaceholder("Spieler auswählen");
 
-        ComboBox<String> loserSelect = new ComboBox<>("Verlierer");
-        loserSelect.setItems(eloService.getSpielerNamen());
+        ComboBox<Spieler> loserSelect = new ComboBox<>("Verlierer");
+        loserSelect.setItems(eloService.getSpielerEntities());
         loserSelect.setPlaceholder("Spieler auswählen");
 
         IntegerField loserGoals = new IntegerField("Tore des Verlierers");

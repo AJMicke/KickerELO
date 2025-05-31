@@ -30,7 +30,7 @@ To build the project and run the application with the embedded H2 database, use 
 
 ```sh
 mvn clean package
-mvn spring-boot:run
+mvn spring-boot:run -Ptest
 ```
 
 

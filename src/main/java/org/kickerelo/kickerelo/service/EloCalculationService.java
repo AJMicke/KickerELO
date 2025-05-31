@@ -1,6 +1,8 @@
 package org.kickerelo.kickerelo.service;
 
 import org.kickerelo.kickerelo.data.Spieler;
+import org.kickerelo.kickerelo.util.EloChange1vs1;
+import org.kickerelo.kickerelo.util.EloChange2vs2;
 import org.springframework.stereotype.Service;
 
 
@@ -18,7 +20,7 @@ public class EloCalculationService {
      * @param verlierer The entity representing the losing player
      * @param toreVerlierer The number of goals of the losing player
      */
-    public void updateElo1vs1(Spieler gewinner, Spieler verlierer, short toreVerlierer) {
+    public EloChange1vs1 updateElo1vs1(Spieler gewinner, Spieler verlierer, short toreVerlierer) {
         final float baseK = 50;
         final float reductionPerGoal = 0.1f * baseK;
         final float finalK = baseK - (reductionPerGoal * toreVerlierer);
@@ -28,6 +30,8 @@ public class EloCalculationService {
 
         gewinner.setElo1vs1(gewinner.getElo1vs1() + eloChange);
         verlierer.setElo1vs1(verlierer.getElo1vs1() - eloChange);
+
+        return new EloChange1vs1(eloChange, -eloChange);
     }
 
     /**
@@ -38,7 +42,7 @@ public class EloCalculationService {
      * @param verliererHinten The losing defensive player
      * @param toreVerlierer The number of goals of the losing teams
      */
-    public void updateElo2vs2(Spieler gewinnerVorn, Spieler gewinnerHinten, Spieler verliererVorn, Spieler verliererHinten, short toreVerlierer) {
+    public EloChange2vs2 updateElo2vs2(Spieler gewinnerVorn, Spieler gewinnerHinten, Spieler verliererVorn, Spieler verliererHinten, short toreVerlierer) {
         final float baseK = 100;
         final double adjustedK = baseK * (1 - (0.1 * toreVerlierer));
         var totalWinnerElo  = gewinnerVorn.getElo2vs2() + gewinnerHinten.getElo2vs2();
@@ -60,6 +64,8 @@ public class EloCalculationService {
         gewinnerHinten.setElo2vs2((float) (gewinnerHinten.getElo2vs2() + winner2EloChange));
         verliererVorn.setElo2vs2((float) (verliererVorn.getElo2vs2() + loser1EloChange));
         verliererHinten.setElo2vs2((float) (verliererHinten.getElo2vs2() + loser2EloChange));
+
+        return new EloChange2vs2(winner1EloChange, winner2EloChange, loser1EloChange, loser2EloChange);
     }
 
     public float getInitialElo1vs1() {

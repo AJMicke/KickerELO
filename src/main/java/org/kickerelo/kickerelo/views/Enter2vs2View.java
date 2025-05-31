@@ -1,5 +1,6 @@
 package org.kickerelo.kickerelo.views;
 
+import org.kickerelo.kickerelo.data.Spieler;
 import org.kickerelo.kickerelo.exception.DuplicatePlayerException;
 import org.kickerelo.kickerelo.exception.InvalidDataException;
 import org.kickerelo.kickerelo.exception.NoSuchPlayerException;
@@ -20,20 +21,20 @@ public class Enter2vs2View extends VerticalLayout {
     public Enter2vs2View(KickerEloService eloService) {
         H2 subheading = new H2("2 vs 2 Ergebnis");
 
-        ComboBox<String> winnerFrontSelect = new ComboBox<>("Gewinner vorne");
-        winnerFrontSelect.setItems(eloService.getSpielerNamen());
+        ComboBox<Spieler> winnerFrontSelect = new ComboBox<>("Gewinner vorne");
+        winnerFrontSelect.setItems(eloService.getSpielerEntities());
         winnerFrontSelect.setPlaceholder("Spieler auswählen");
 
-        ComboBox<String> winnerBackSelect = new ComboBox<>("Gewinner hinten");
-        winnerBackSelect.setItems(eloService.getSpielerNamen());
+        ComboBox<Spieler> winnerBackSelect = new ComboBox<>("Gewinner hinten");
+        winnerBackSelect.setItems(eloService.getSpielerEntities());
         winnerBackSelect.setPlaceholder("Spieler auswählen");
 
-        ComboBox<String> loserFrontSelect = new ComboBox<>("Verlierer vorne");
-        loserFrontSelect.setItems(eloService.getSpielerNamen());
+        ComboBox<Spieler> loserFrontSelect = new ComboBox<>("Verlierer vorne");
+        loserFrontSelect.setItems(eloService.getSpielerEntities());
         loserFrontSelect.setPlaceholder("Spieler auswählen");
 
-        ComboBox<String> loserBackSelect = new ComboBox<>("Verlierer hinten");
-        loserBackSelect.setItems(eloService.getSpielerNamen());
+        ComboBox<Spieler> loserBackSelect = new ComboBox<>("Verlierer hinten");
+        loserBackSelect.setItems(eloService.getSpielerEntities());
         loserBackSelect.setPlaceholder("Spieler auswählen");
 
         IntegerField loserGoals = new IntegerField("Tore des Verlierers");
