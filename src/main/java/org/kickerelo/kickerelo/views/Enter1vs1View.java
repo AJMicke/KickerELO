@@ -1,5 +1,11 @@
 package org.kickerelo.kickerelo.views;
 
+import org.kickerelo.kickerelo.exception.DuplicatePlayerException;
+import org.kickerelo.kickerelo.exception.InvalidDataException;
+import org.kickerelo.kickerelo.exception.NoSuchPlayerException;
+import org.kickerelo.kickerelo.exception.PlayerNameNotSetException;
+import org.kickerelo.kickerelo.service.KickerEloService;
+
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.H2;
@@ -8,11 +14,6 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.router.Route;
-import org.kickerelo.kickerelo.exception.DuplicatePlayerException;
-import org.kickerelo.kickerelo.exception.InvalidDataException;
-import org.kickerelo.kickerelo.exception.NoSuchPlayerException;
-import org.kickerelo.kickerelo.exception.PlayerNameNotSetException;
-import org.kickerelo.kickerelo.service.KickerEloService;
 
 @Route(value = "app/enter1vs1")
 public class Enter1vs1View extends VerticalLayout {

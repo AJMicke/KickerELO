@@ -1,5 +1,10 @@
 package org.kickerelo.kickerelo.views;
 
+import java.util.List;
+
+import org.kickerelo.kickerelo.data.Spieler;
+import org.kickerelo.kickerelo.util.Spieler2vs2EloComparator;
+
 import com.github.appreciated.apexcharts.ApexChartsBuilder;
 import com.github.appreciated.apexcharts.config.Theme;
 import com.github.appreciated.apexcharts.config.builder.ChartBuilder;
@@ -14,12 +19,7 @@ import com.github.appreciated.apexcharts.config.xaxis.Labels;
 import com.github.appreciated.apexcharts.helper.Series;
 import com.vaadin.flow.router.Route;
 
-import org.kickerelo.kickerelo.data.Spieler;
-import org.kickerelo.kickerelo.util.Spieler2vs2EloComparator;
-
-import java.util.List;
-
-@Route(value = "app/chart1vs1")
+@Route(value = "app/chart2vs2")
 public class Chart2vs2 extends ApexChartsBuilder {
     public Chart2vs2(List<Spieler> l) {
         Theme theme = new Theme();

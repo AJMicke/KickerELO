@@ -1,5 +1,10 @@
 package org.kickerelo.kickerelo.views;
 
+import java.util.List;
+
+import org.kickerelo.kickerelo.data.Spieler;
+import org.kickerelo.kickerelo.util.Spieler1vs1EloComparator;
+
 import com.github.appreciated.apexcharts.ApexChartsBuilder;
 import com.github.appreciated.apexcharts.config.Theme;
 import com.github.appreciated.apexcharts.config.builder.ChartBuilder;
@@ -11,19 +16,8 @@ import com.github.appreciated.apexcharts.config.chart.zoom.ZoomType;
 import com.github.appreciated.apexcharts.config.theme.Mode;
 import com.github.appreciated.apexcharts.config.theme.Monochrome;
 import com.github.appreciated.apexcharts.config.xaxis.Labels;
-import com.github.appreciated.apexcharts.config.xaxis.labels.Style;
-import com.github.appreciated.apexcharts.config.yaxis.Title;
 import com.github.appreciated.apexcharts.helper.Series;
-import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.VaadinService;
-import com.vaadin.flow.theme.lumo.Lumo;
-import org.kickerelo.kickerelo.data.Spieler;
-import org.kickerelo.kickerelo.util.Spieler1vs1EloComparator;
-
-import java.math.BigDecimal;
-import java.util.List;
 
 @Route(value = "app/chart1vs1")
 public class Chart1vs1 extends ApexChartsBuilder {

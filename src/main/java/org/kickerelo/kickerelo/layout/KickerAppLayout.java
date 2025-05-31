@@ -35,8 +35,8 @@ public class KickerAppLayout extends AppLayout {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         boolean isAuthenticated = auth != null && auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken);
 
-        if (isAuthenticated) {
-            Anchor logoutLink = new Anchor("/logout", "Logout (" + auth.getName() + ")");
+        if (isAuthenticated && auth != null && auth.getPrincipal() instanceof org.springframework.security.oauth2.core.oidc.user.OidcUser oidcUser) {
+        Anchor logoutLink = new Anchor("/logout", "Logout (" + oidcUser.getPreferredUsername() + ")");
             logoutLink.getElement().getStyle()
                     .set("margin-left", "auto")
                     .set("margin-right", "10px")
