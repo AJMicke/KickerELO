@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class RedirectController {
     @GetMapping("/")
     public String redirectToApp() {
-        return "redirect:/app/app";
+        return "redirect:/app";
     }
 }

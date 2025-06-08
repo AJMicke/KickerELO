@@ -1,5 +1,7 @@
 package org.kickerelo.kickerelo.views;
 
+import java.util.List;
+
 import org.kickerelo.kickerelo.exception.DuplicatePlayerException;
 import org.kickerelo.kickerelo.exception.InvalidDataException;
 import org.kickerelo.kickerelo.exception.PlayerNameNotSetException;
@@ -7,19 +9,32 @@ import org.kickerelo.kickerelo.service.KickerEloService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
-import java.util.List;
 
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.Route;
 
-@Route("app/admin")
+@Route("admin")
 public class AdminView extends VerticalLayout {
+
+    public void beforeEnter(BeforeEnterEvent event) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !(auth.getPrincipal() instanceof OidcUser oidcUser)) {
+            event.rerouteTo("");
+            return;
+        }
+
+        var groups = oidcUser.getClaimAsStringList("groups");
+        if (groups == null || !groups.contains("Kicker Admin")) {
+            event.rerouteTo("");
+        }
+    }
+
     public AdminView(KickerEloService service) {
         // Zeige den aktuell authentifizierten Benutzer
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -36,19 +51,19 @@ public class AdminView extends VerticalLayout {
                 listOfGroups = List.of();
             }
             add(new Paragraph("Angemeldet als: " + username));
-            add(new Paragraph("Gruppen: " + listOfGroups.toString()));
 
-            if (listOfGroups.contains("Kicker Admin")) {
-                add(new Paragraph("Du bist Admin!"));
+            if (!listOfGroups.contains("Kicker Admin")) {
+                add(new Paragraph("Du bist nicht berechtigt, diese Seite zu sehen."));
+                getUI().ifPresent(ui -> ui.navigate(""));
+                return;
             } else {
-                if (listOfGroups.contains("Kicker User")) {
-                    add(new Paragraph("Du bist kein Admin, aber ein kickerelo User!"));
-                } else {
-                    add(new Paragraph("Du bist gar nichts!"));
-                }
+                add(new Paragraph("Willkommen im Admin-Bereich!"));
             }
         } else {
             add(new Paragraph("Niemand ist angemeldet"));
+            add(new Paragraph("Du bist nicht berechtigt, diese Seite zu sehen."));
+            getUI().ifPresent(ui -> ui.navigate(""));
+            return;
         }
 
         TextField spielername = new TextField("Spielername");

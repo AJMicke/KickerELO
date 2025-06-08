@@ -15,7 +15,7 @@ import com.vaadin.flow.component.progressbar.ProgressBar;
 import com.vaadin.flow.component.progressbar.ProgressBarVariant;
 import com.vaadin.flow.router.Route;
 
-@Route("app/stat2vs2")
+@Route("stat2vs2")
 public class Stat2vs2View extends VerticalLayout {
     Stat2vs2Service stat2vs2Service;
     KickerEloService kickerEloService;

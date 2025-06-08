@@ -19,7 +19,7 @@ import com.vaadin.flow.data.renderer.LocalDateTimeRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 
-@Route("app/history1vs1")
+@Route("history1vs1")
 public class History1vs1View extends HistoryView {
 
     private final Ergebnis1vs1Repository repo;

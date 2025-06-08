@@ -21,7 +21,7 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 
 
-@Route("app/history2vs2")
+@Route("history2vs2")
 public class History2vs2View extends HistoryView {
 
     private final Ergebnis2vs2Repository repo;

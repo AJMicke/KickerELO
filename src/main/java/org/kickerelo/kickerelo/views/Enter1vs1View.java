@@ -16,7 +16,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.router.Route;
 
-@Route(value = "app/enter1vs1")
+@Route("enter1vs1")
 public class Enter1vs1View extends VerticalLayout {
 
     public Enter1vs1View(KickerEloService eloService) {

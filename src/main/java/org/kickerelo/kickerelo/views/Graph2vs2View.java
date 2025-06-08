@@ -10,7 +10,7 @@ import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 
-@Route("app/graph2vs2")
+@Route("graph2vs2")
 public class Graph2vs2View extends VerticalLayout {
 
     public Graph2vs2View(SpielerRepository repo) {

@@ -16,7 +16,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.router.Route;
 
-@Route(value = "app/enter2vs2")
+@Route("enter2vs2")
 public class Enter2vs2View extends VerticalLayout {
     public Enter2vs2View(KickerEloService eloService) {
         H2 subheading = new H2("2 vs 2 Ergebnis");

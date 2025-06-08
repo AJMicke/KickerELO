@@ -12,7 +12,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.SortDirection;
 import com.vaadin.flow.router.Route;
 
-@Route("app")
+@Route("/")
 public class PlayerListView extends VerticalLayout {
     public PlayerListView(KickerEloService eloService) {
         setSizeFull();
