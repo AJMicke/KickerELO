@@ -1,85 +1,21 @@
 package org.kickerelo.kickerelo.views;
 
-import java.util.List;
-
-import org.kickerelo.kickerelo.exception.DuplicatePlayerException;
-import org.kickerelo.kickerelo.exception.InvalidDataException;
-import org.kickerelo.kickerelo.exception.PlayerNameNotSetException;
-import org.kickerelo.kickerelo.service.KickerEloService;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
-
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.Route;
+import org.kickerelo.kickerelo.exception.DuplicatePlayerException;
+import org.kickerelo.kickerelo.exception.InvalidDataException;
+import org.kickerelo.kickerelo.exception.PlayerNameNotSetException;
+import org.kickerelo.kickerelo.service.KickerEloService;
 
 @Route("admin")
 public class AdminView extends VerticalLayout {
-
-    private final org.springframework.core.env.Environment environment;
-
-    // Methode zum Prüfen, ob das "test"-Profil aktiv ist
-    private boolean isTestProfileActive() {
-        for (String profile : environment.getActiveProfiles()) {
-            if ("test".equals(profile)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean isAuthentikated() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null && auth.getPrincipal() instanceof OidcUser oidcUser) {
-            Object groupsObj = oidcUser.getClaims().getOrDefault("groups", List.of());
-            List<String> listOfGroups;
-            if (groupsObj instanceof List<?> groupsList) {
-                listOfGroups = groupsList.stream()
-                        .filter(String.class::isInstance)
-                        .map(String.class::cast)
-                        .toList();
-            } else {
-                listOfGroups = List.of();
-            }
-
-            return listOfGroups.contains("Kicker Admin");
-        } else {
-            return false;
-        }
-    }
-
-    public void beforeEnter(BeforeEnterEvent event) {
-        if (isTestProfileActive()) {
-            return; // Skip authentication check in test profile
-        }
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || !(auth.getPrincipal() instanceof OidcUser oidcUser)) {
-            event.rerouteTo("");
-            return;
-        }
-
-        var groups = oidcUser.getClaimAsStringList("groups");
-        if (groups == null || !groups.contains("Kicker Admin")) {
-            event.rerouteTo("");
-        }
-    }
-
-    public AdminView(KickerEloService service, org.springframework.core.env.Environment environment) {
-        this.environment = environment;
-        
-        if (!isTestProfileActive()) {
-            if (!isAuthentikated()) {
-                add(new Paragraph("Du bist nicht berechtigt, diese Seite zu sehen."));
-                getUI().ifPresent(ui -> ui.navigate(""));
-                return;
-            }
-        }
+    public AdminView(KickerEloService service) {
+        H2 subheader = new H2("Verwaltung");
 
         TextField spielername = new TextField("Spielername");
         spielername.addClassName("bordered");
@@ -105,7 +41,6 @@ public class AdminView extends VerticalLayout {
             service.recalculateAll1vs1();
             Notification.show("Recalculating finished").addThemeVariants(NotificationVariant.LUMO_SUCCESS);
         });
-
         Button recalc2vs2Button = new Button("2 vs 2 Elo neu berechnen", e -> {
             Notification.show("Recalculating Elo").addThemeVariants(NotificationVariant.LUMO_WARNING);
             service.recalculateAll2vs2();

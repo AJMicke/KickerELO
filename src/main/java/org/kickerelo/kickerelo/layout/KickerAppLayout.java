@@ -14,11 +14,6 @@ import com.vaadin.flow.dom.Style;
 import com.vaadin.flow.router.Layout;
 import org.kickerelo.kickerelo.views.*;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-
-
 @Layout
 @JsModule("./prefers-color-scheme.js")
 public class KickerAppLayout extends AppLayout {
@@ -30,26 +25,6 @@ public class KickerAppLayout extends AppLayout {
         title.getStyle().set("font-size", "var(--lumo-font-size-l)").set("margin", "0");
 
         addToNavbar(drawerToggle, title);
-
-        // Add login/logout button
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        boolean isAuthenticated = auth != null && auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken);
-
-        if (isAuthenticated && auth != null && auth.getPrincipal() instanceof org.springframework.security.oauth2.core.oidc.user.OidcUser oidcUser) {
-        Anchor logoutLink = new Anchor("/logout", "Logout (" + oidcUser.getPreferredUsername() + ")");
-            logoutLink.getElement().getStyle()
-                    .set("margin-left", "auto")
-                    .set("margin-right", "10px")
-                    .set("align-self", "center");
-            addToNavbar(logoutLink);
-        } else {
-            Anchor loginLink = new Anchor("/oauth2/authorization/oidc", "Login");
-            loginLink.getElement().getStyle()
-                    .set("margin-left", "auto")
-                    .set("margin-right", "10px")
-                    .set("align-self", "center");
-            addToNavbar(loginLink);
-        }
 
         SideNav general = new SideNav("Allgemein");
         general.setCollapsible(true);
