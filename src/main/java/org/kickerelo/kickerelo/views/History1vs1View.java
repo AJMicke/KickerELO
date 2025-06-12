@@ -1,10 +1,5 @@
 package org.kickerelo.kickerelo.views;
 
-import java.util.List;
-
-import org.kickerelo.kickerelo.data.Ergebnis1vs1;
-import org.kickerelo.kickerelo.repository.Ergebnis1vs1Repository;
-
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridSortOrder;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
@@ -18,6 +13,10 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.LocalDateTimeRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
+import org.kickerelo.kickerelo.data.Ergebnis1vs1;
+import org.kickerelo.kickerelo.repository.Ergebnis1vs1Repository;
+
+import java.util.List;
 
 @Route("history1vs1")
 public class History1vs1View extends HistoryView {
