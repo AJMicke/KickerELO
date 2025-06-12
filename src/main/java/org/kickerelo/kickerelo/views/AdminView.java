@@ -27,26 +27,46 @@ public class AdminView extends VerticalLayout {
     // Methode zum Prüfen, ob das "test"-Profil aktiv ist
     private boolean isTestProfileActive() {
         for (String profile : environment.getActiveProfiles()) {
-            System.out.println("Active profile: " + profile);
-            if ("prod".equals(profile)) {
+            if ("test".equals(profile)) {
                 return true;
             }
         }
         return false;
     }
 
-    public void beforeEnter(BeforeEnterEvent event) {
-        if (!isTestProfileActive()) {
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            if (auth == null || !(auth.getPrincipal() instanceof OidcUser oidcUser)) {
-                event.rerouteTo("");
-                return;
+    private boolean isAuthentikated() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.getPrincipal() instanceof OidcUser oidcUser) {
+            Object groupsObj = oidcUser.getClaims().getOrDefault("groups", List.of());
+            List<String> listOfGroups;
+            if (groupsObj instanceof List<?> groupsList) {
+                listOfGroups = groupsList.stream()
+                        .filter(String.class::isInstance)
+                        .map(String.class::cast)
+                        .toList();
+            } else {
+                listOfGroups = List.of();
             }
 
-            var groups = oidcUser.getClaimAsStringList("groups");
-            if (groups == null || !groups.contains("Kicker Admin")) {
-                event.rerouteTo("");
-            }
+            return listOfGroups.contains("Kicker Admin");
+        } else {
+            return false;
+        }
+    }
+
+    public void beforeEnter(BeforeEnterEvent event) {
+        if (isTestProfileActive()) {
+            return; // Skip authentication check in test profile
+        }
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !(auth.getPrincipal() instanceof OidcUser oidcUser)) {
+            event.rerouteTo("");
+            return;
+        }
+
+        var groups = oidcUser.getClaimAsStringList("groups");
+        if (groups == null || !groups.contains("Kicker Admin")) {
+            event.rerouteTo("");
         }
     }
 
@@ -54,30 +74,7 @@ public class AdminView extends VerticalLayout {
         this.environment = environment;
         
         if (!isTestProfileActive()) {
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            if (auth != null && auth.getPrincipal() instanceof OidcUser oidcUser) {
-                String username = oidcUser.getPreferredUsername();
-                Object groupsObj = oidcUser.getClaims().getOrDefault("groups", List.of());
-                List<String> listOfGroups;
-                if (groupsObj instanceof List<?> groupsList) {
-                    listOfGroups = groupsList.stream()
-                            .filter(String.class::isInstance)
-                            .map(String.class::cast)
-                            .toList();
-                } else {
-                    listOfGroups = List.of();
-                }
-                add(new Paragraph("Angemeldet als: " + username));
-
-                if (!listOfGroups.contains("Kicker Admin")) {
-                    add(new Paragraph("Du bist nicht berechtigt, diese Seite zu sehen."));
-                    getUI().ifPresent(ui -> ui.navigate(""));
-                    return;
-                } else {
-                    add(new Paragraph("Willkommen im Admin-Bereich!"));
-                }
-            } else {
-                add(new Paragraph("Niemand ist angemeldet"));
+            if (!isAuthentikated()) {
                 add(new Paragraph("Du bist nicht berechtigt, diese Seite zu sehen."));
                 getUI().ifPresent(ui -> ui.navigate(""));
                 return;
