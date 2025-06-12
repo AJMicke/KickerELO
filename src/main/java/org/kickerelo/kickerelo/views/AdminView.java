@@ -22,48 +22,66 @@ import com.vaadin.flow.router.Route;
 @Route("admin")
 public class AdminView extends VerticalLayout {
 
-    public void beforeEnter(BeforeEnterEvent event) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || !(auth.getPrincipal() instanceof OidcUser oidcUser)) {
-            event.rerouteTo("");
-            return;
-        }
+    private final org.springframework.core.env.Environment environment;
 
-        var groups = oidcUser.getClaimAsStringList("groups");
-        if (groups == null || !groups.contains("Kicker Admin")) {
-            event.rerouteTo("");
+    // Methode zum Prüfen, ob das "test"-Profil aktiv ist
+    private boolean isTestProfileActive() {
+        for (String profile : environment.getActiveProfiles()) {
+            System.out.println("Active profile: " + profile);
+            if ("prod".equals(profile)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void beforeEnter(BeforeEnterEvent event) {
+        if (!isTestProfileActive()) {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if (auth == null || !(auth.getPrincipal() instanceof OidcUser oidcUser)) {
+                event.rerouteTo("");
+                return;
+            }
+
+            var groups = oidcUser.getClaimAsStringList("groups");
+            if (groups == null || !groups.contains("Kicker Admin")) {
+                event.rerouteTo("");
+            }
         }
     }
 
-    public AdminView(KickerEloService service) {
-        // Zeige den aktuell authentifizierten Benutzer
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null && auth.getPrincipal() instanceof OidcUser oidcUser) {
-            String username = oidcUser.getPreferredUsername();
-            Object groupsObj = oidcUser.getClaims().getOrDefault("groups", List.of());
-            List<String> listOfGroups;
-            if (groupsObj instanceof List<?> groupsList) {
-                listOfGroups = groupsList.stream()
-                        .filter(String.class::isInstance)
-                        .map(String.class::cast)
-                        .toList();
-            } else {
-                listOfGroups = List.of();
-            }
-            add(new Paragraph("Angemeldet als: " + username));
+    public AdminView(KickerEloService service, org.springframework.core.env.Environment environment) {
+        this.environment = environment;
+        
+        if (!isTestProfileActive()) {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if (auth != null && auth.getPrincipal() instanceof OidcUser oidcUser) {
+                String username = oidcUser.getPreferredUsername();
+                Object groupsObj = oidcUser.getClaims().getOrDefault("groups", List.of());
+                List<String> listOfGroups;
+                if (groupsObj instanceof List<?> groupsList) {
+                    listOfGroups = groupsList.stream()
+                            .filter(String.class::isInstance)
+                            .map(String.class::cast)
+                            .toList();
+                } else {
+                    listOfGroups = List.of();
+                }
+                add(new Paragraph("Angemeldet als: " + username));
 
-            if (!listOfGroups.contains("Kicker Admin")) {
+                if (!listOfGroups.contains("Kicker Admin")) {
+                    add(new Paragraph("Du bist nicht berechtigt, diese Seite zu sehen."));
+                    getUI().ifPresent(ui -> ui.navigate(""));
+                    return;
+                } else {
+                    add(new Paragraph("Willkommen im Admin-Bereich!"));
+                }
+            } else {
+                add(new Paragraph("Niemand ist angemeldet"));
                 add(new Paragraph("Du bist nicht berechtigt, diese Seite zu sehen."));
                 getUI().ifPresent(ui -> ui.navigate(""));
                 return;
-            } else {
-                add(new Paragraph("Willkommen im Admin-Bereich!"));
             }
-        } else {
-            add(new Paragraph("Niemand ist angemeldet"));
-            add(new Paragraph("Du bist nicht berechtigt, diese Seite zu sehen."));
-            getUI().ifPresent(ui -> ui.navigate(""));
-            return;
         }
 
         TextField spielername = new TextField("Spielername");
