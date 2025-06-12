@@ -12,19 +12,39 @@ import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.dom.Style;
 import com.vaadin.flow.router.Layout;
+import org.kickerelo.kickerelo.util.AccessControlService;
 import org.kickerelo.kickerelo.views.*;
 
 @Layout
 @JsModule("./prefers-color-scheme.js")
 public class KickerAppLayout extends AppLayout {
+    AccessControlService accessControlService;
 
-    public KickerAppLayout() {
+    public KickerAppLayout(AccessControlService accessControlService) {
+        this.accessControlService = accessControlService;
         DrawerToggle drawerToggle = new DrawerToggle();
 
         H1 title = new H1("Kicker-ELO");
         title.getStyle().set("font-size", "var(--lumo-font-size-l)").set("margin", "0");
 
         addToNavbar(drawerToggle, title);
+
+        // Add login/logout button
+        if (accessControlService.userAllowedForRole("")) {
+            Anchor logoutLink = new Anchor("/logout", "Logout");
+            logoutLink.getElement().getStyle()
+                    .set("margin-left", "auto")
+                    .set("margin-right", "10px")
+                    .set("align-self", "center");
+            addToNavbar(logoutLink);
+        } else {
+            Anchor loginLink = new Anchor("/oauth2/authorization/oidc", "Login");
+            loginLink.getElement().getStyle()
+                    .set("margin-left", "auto")
+                    .set("margin-right", "10px")
+                    .set("align-self", "center");
+            addToNavbar(loginLink);
+        }
 
         SideNav general = new SideNav("Allgemein");
         general.setCollapsible(true);
