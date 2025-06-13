@@ -1,17 +1,18 @@
 package org.kickerelo.kickerelo.views;
 
+import java.util.List;
+
+import org.kickerelo.kickerelo.data.Spieler;
+import org.kickerelo.kickerelo.service.KickerEloService;
+
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridSortOrder;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.SortDirection;
 import com.vaadin.flow.router.Route;
-import org.kickerelo.kickerelo.data.Spieler;
-import org.kickerelo.kickerelo.service.KickerEloService;
 
-import java.util.List;
-
-@Route("")
+@Route("/")
 public class PlayerListView extends VerticalLayout {
     public PlayerListView(KickerEloService eloService) {
         setSizeFull();

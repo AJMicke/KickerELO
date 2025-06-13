@@ -2,6 +2,13 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+data.mv.db
+src/main/bundles
+node_modules
+
+# for secrets
+.env
+.vscode
 
 ### IntelliJ IDEA ###
 .idea/modules.xml

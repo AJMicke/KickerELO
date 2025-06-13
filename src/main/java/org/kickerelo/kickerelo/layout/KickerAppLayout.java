@@ -15,6 +15,11 @@ import com.vaadin.flow.router.Layout;
 import org.kickerelo.kickerelo.util.AccessControlService;
 import org.kickerelo.kickerelo.views.*;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+
+
 @Layout
 @JsModule("./prefers-color-scheme.js")
 public class KickerAppLayout extends AppLayout {
@@ -32,6 +37,7 @@ public class KickerAppLayout extends AppLayout {
         // Add login/logout button
         if (accessControlService.userAllowedForRole("")) {
             Anchor logoutLink = new Anchor("/logout", "Logout");
+
             logoutLink.getElement().getStyle()
                     .set("margin-left", "auto")
                     .set("margin-right", "10px")

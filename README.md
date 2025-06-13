@@ -1,7 +1,7 @@
 # KickerELO
 
 KickerELO is a web application for displaying Elo ratings for foosball (table soccer) games.  
-It uses **Spring Boot** for the backend, **Vaadin** for the frontend, and **MariaDB** as the database.
+It uses **Spring Boot** for the backend, **Vaadin** for the frontend, and **MariaDB** as the database. It is compatible with any OpenID Connect (OIDC) provider.
 
 ## Requirements
 
