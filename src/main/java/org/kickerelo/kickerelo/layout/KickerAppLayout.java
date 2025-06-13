@@ -12,6 +12,7 @@ import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.dom.Style;
 import com.vaadin.flow.router.Layout;
+import org.kickerelo.kickerelo.util.AccessControlService;
 import org.kickerelo.kickerelo.views.*;
 
 import org.springframework.security.core.Authentication;
@@ -22,8 +23,10 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 @Layout
 @JsModule("./prefers-color-scheme.js")
 public class KickerAppLayout extends AppLayout {
+    AccessControlService accessControlService;
 
-    public KickerAppLayout() {
+    public KickerAppLayout(AccessControlService accessControlService) {
+        this.accessControlService = accessControlService;
         DrawerToggle drawerToggle = new DrawerToggle();
 
         H1 title = new H1("Kicker-ELO");
@@ -32,11 +35,9 @@ public class KickerAppLayout extends AppLayout {
         addToNavbar(drawerToggle, title);
 
         // Add login/logout button
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        boolean isAuthenticated = auth != null && auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken);
+        if (accessControlService.userAllowedForRole("")) {
+            Anchor logoutLink = new Anchor("/logout", "Logout");
 
-        if (isAuthenticated && auth != null && auth.getPrincipal() instanceof org.springframework.security.oauth2.core.oidc.user.OidcUser oidcUser) {
-        Anchor logoutLink = new Anchor("/logout", "Logout (" + oidcUser.getPreferredUsername() + ")");
             logoutLink.getElement().getStyle()
                     .set("margin-left", "auto")
                     .set("margin-right", "10px")

@@ -1,14 +1,10 @@
 package org.kickerelo.kickerelo.views;
 
-import java.util.List;
-
 import org.kickerelo.kickerelo.exception.DuplicatePlayerException;
 import org.kickerelo.kickerelo.exception.InvalidDataException;
 import org.kickerelo.kickerelo.exception.PlayerNameNotSetException;
 import org.kickerelo.kickerelo.service.KickerEloService;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.kickerelo.kickerelo.util.AccessControlService;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Paragraph;
@@ -22,63 +18,12 @@ import com.vaadin.flow.router.Route;
 @Route("admin")
 public class AdminView extends VerticalLayout {
 
-    private final org.springframework.core.env.Environment environment;
-
-    // Methode zum Prüfen, ob das "test"-Profil aktiv ist
-    private boolean isTestProfileActive() {
-        for (String profile : environment.getActiveProfiles()) {
-            if ("test".equals(profile)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean isAuthentikated() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null && auth.getPrincipal() instanceof OidcUser oidcUser) {
-            Object groupsObj = oidcUser.getClaims().getOrDefault("groups", List.of());
-            List<String> listOfGroups;
-            if (groupsObj instanceof List<?> groupsList) {
-                listOfGroups = groupsList.stream()
-                        .filter(String.class::isInstance)
-                        .map(String.class::cast)
-                        .toList();
-            } else {
-                listOfGroups = List.of();
-            }
-
-            return listOfGroups.contains("Kicker Admin");
-        } else {
-            return false;
-        }
-    }
-
-    public void beforeEnter(BeforeEnterEvent event) {
-        if (isTestProfileActive()) {
-            return; // Skip authentication check in test profile
-        }
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || !(auth.getPrincipal() instanceof OidcUser oidcUser)) {
-            event.rerouteTo("");
+    public AdminView(KickerEloService service, AccessControlService accessControlService) {
+        // Deny access if user isn't part of the Kicker Admin group
+        if (!accessControlService.userAllowedForRole("Kicker Admin")) {
+            add(new Paragraph("Du bist nicht berechtigt, diese Seite zu sehen."));
+            getUI().ifPresent(ui -> ui.navigate(""));
             return;
-        }
-
-        var groups = oidcUser.getClaimAsStringList("groups");
-        if (groups == null || !groups.contains("Kicker Admin")) {
-            event.rerouteTo("");
-        }
-    }
-
-    public AdminView(KickerEloService service, org.springframework.core.env.Environment environment) {
-        this.environment = environment;
-        
-        if (!isTestProfileActive()) {
-            if (!isAuthentikated()) {
-                add(new Paragraph("Du bist nicht berechtigt, diese Seite zu sehen."));
-                getUI().ifPresent(ui -> ui.navigate(""));
-                return;
-            }
         }
 
         TextField spielername = new TextField("Spielername");
