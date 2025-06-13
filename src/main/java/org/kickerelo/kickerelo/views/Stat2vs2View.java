@@ -1,5 +1,11 @@
 package org.kickerelo.kickerelo.views;
 
+import org.kickerelo.kickerelo.data.Spieler;
+import org.kickerelo.kickerelo.repository.Ergebnis2vs2Repository;
+import org.kickerelo.kickerelo.service.KickerEloService;
+import org.kickerelo.kickerelo.service.Stat2vs2Service;
+import org.kickerelo.kickerelo.util.Position;
+
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.NativeLabel;
@@ -8,11 +14,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.progressbar.ProgressBar;
 import com.vaadin.flow.component.progressbar.ProgressBarVariant;
 import com.vaadin.flow.router.Route;
-import org.kickerelo.kickerelo.data.Spieler;
-import org.kickerelo.kickerelo.repository.Ergebnis2vs2Repository;
-import org.kickerelo.kickerelo.service.KickerEloService;
-import org.kickerelo.kickerelo.service.Stat2vs2Service;
-import org.kickerelo.kickerelo.util.Position;
 
 @Route("stat2vs2")
 public class Stat2vs2View extends VerticalLayout {
