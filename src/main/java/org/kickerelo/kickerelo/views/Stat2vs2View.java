@@ -86,10 +86,10 @@ public class Stat2vs2View extends VerticalLayout {
     private void updateGoalDiffs(Spieler s) {
         String text = "Mittlere Tordifferenz hinten: ";
         Float backDiff = repo.avgGoalDiffBack(s);
-        goalDiffBack.setText(backDiff.isNaN() ? text + "-" : text + String.format("%.2f", backDiff));
+        goalDiffBack.setText(backDiff == null || backDiff.isNaN() ? text + "-" : text + String.format("%.2f", backDiff));
         text = "Mittlere Tordifferenz vorne: ";
         Float frontDiff = repo.avgGoalDiffFront(s);
-        goalDiffFront.setText(frontDiff.isNaN() ? text + "-" : text + String.format("%.2f", frontDiff));
+        goalDiffFront.setText(frontDiff == null || frontDiff.isNaN() ? text + "-" : text + String.format("%.2f", frontDiff));
 
     }
 }
