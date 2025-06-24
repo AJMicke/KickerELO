@@ -6,6 +6,7 @@ import org.kickerelo.kickerelo.exception.InvalidDataException;
 import org.kickerelo.kickerelo.exception.NoSuchPlayerException;
 import org.kickerelo.kickerelo.exception.PlayerNameNotSetException;
 import org.kickerelo.kickerelo.service.KickerEloService;
+import org.kickerelo.kickerelo.util.AccessControlService;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -18,7 +19,14 @@ import com.vaadin.flow.router.Route;
 
 @Route("enter2vs2")
 public class Enter2vs2View extends VerticalLayout {
-    public Enter2vs2View(KickerEloService eloService) {
+    public Enter2vs2View(KickerEloService eloService, AccessControlService accessControlService) {
+        // Deny access if user isn't part of the Kicker User group
+        if (!accessControlService.userAllowedForRole("Kicker User") && !accessControlService.userAllowedForRole("Kicker Admin")) {
+            add(new H2("Du bist nicht berechtigt, diese Seite zu sehen."));
+            getUI().ifPresent(ui -> ui.navigate(""));
+            return;
+        }
+
         H2 subheading = new H2("2 vs 2 Ergebnis");
 
         ComboBox<Spieler> winnerFrontSelect = new ComboBox<>("Gewinner vorne");
