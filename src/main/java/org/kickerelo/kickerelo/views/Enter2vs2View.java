@@ -11,6 +11,7 @@ import org.kickerelo.kickerelo.util.AccessControlService;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -22,7 +23,7 @@ public class Enter2vs2View extends VerticalLayout {
     public Enter2vs2View(KickerEloService eloService, AccessControlService accessControlService) {
         // Deny access if user isn't part of the Kicker User group
         if (!accessControlService.userAllowedForRole("Kicker User") && !accessControlService.userAllowedForRole("Kicker Admin")) {
-            add(new H2("Du bist nicht berechtigt, diese Seite zu sehen."));
+            add(new Paragraph("Du bist nicht berechtigt, diese Seite zu sehen."));
             getUI().ifPresent(ui -> ui.navigate(""));
             return;
         }
