@@ -31,6 +31,7 @@ public class Stat2vs2View extends VerticalLayout {
     NativeLabel winRateBackText = new NativeLabel();
     Paragraph goalDiffBack = new Paragraph();
     Paragraph goalDiffFront = new Paragraph();
+    Paragraph streak = new Paragraph();
 
     public Stat2vs2View(Stat2vs2Service service, KickerEloService kickerService, Ergebnis2vs2Repository repo) {
         this.stat2vs2Service = service;
@@ -40,7 +41,7 @@ public class Stat2vs2View extends VerticalLayout {
         selector = new ComboBox<>("Spieler");
         selector.setItems(kickerService.getSpielerEntities());
         selector.addValueChangeListener(event -> updateData(selector.getValue()));
-        add(subheading, selector, generalInfo, frontRateText, frontRate, winRateFrontText, winRateFront, winRateBackText, winRateBack, goalDiffBack, goalDiffFront);
+        add(subheading, selector, generalInfo, frontRateText, frontRate, winRateFrontText, winRateFront, winRateBackText, winRateBack, goalDiffBack, goalDiffFront, streak);
     }
 
     private void updateData(Spieler s) {
@@ -49,6 +50,7 @@ public class Stat2vs2View extends VerticalLayout {
         updateFrontWinrate(s);
         updateBackWinrate(s);
         updateGoalDiffs(s);
+        updateStreak(s);
     }
 
     private void updateGeneralInfo(Spieler s) {
@@ -91,5 +93,10 @@ public class Stat2vs2View extends VerticalLayout {
         Float frontDiff = repo.avgGoalDiffFront(s);
         goalDiffFront.setText(frontDiff == null || frontDiff.isNaN() ? text + "-" : text + String.format("%.2f", frontDiff));
 
+    }
+
+    private void updateStreak(Spieler s) {
+        String text = "Aktueller Streak: ";
+        streak.setText(text + stat2vs2Service.getStreak(s));
     }
 }
