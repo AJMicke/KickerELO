@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface Ergebnis2vs2Repository extends JpaRepository<Ergebnis2vs2, Long> {
     int countByGewinnerHinten(Spieler gewinnerHinten);
@@ -24,4 +26,7 @@ public interface Ergebnis2vs2Repository extends JpaRepository<Ergebnis2vs2, Long
 
     @Query("select avg(case when e.verliererHinten = :s then (e.toreVerlierer - 10) when e.gewinnerHinten = :s then (10 - e.toreVerlierer) end) from Ergebnis2vs2 e where e.gewinnerHinten = :s or e.verliererHinten = :s")
     Float avgGoalDiffBack(@Param("s") Spieler s);
+
+    @Query("select e from Ergebnis2vs2 e where (:s = e.verliererHinten or :s = e.verliererVorn or :s = e.gewinnerHinten or :s = e.gewinnerVorn) order by e.timestamp desc")
+    List<Ergebnis2vs2> getResultsForSpieler(@Param("s") Spieler s);
 }
