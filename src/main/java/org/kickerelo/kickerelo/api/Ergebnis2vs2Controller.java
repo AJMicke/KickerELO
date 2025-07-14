@@ -1,6 +1,5 @@
 package org.kickerelo.kickerelo.api;
 
-import org.kickerelo.kickerelo.data.Ergebnis2vs2;
 import org.kickerelo.kickerelo.repository.Ergebnis2vs2Repository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,13 +19,13 @@ public class Ergebnis2vs2Controller {
     }
 
     @GetMapping
-    public ResponseEntity<List<Ergebnis2vs2>> getAllResults() {
-        return ResponseEntity.ok(ergebnis2vs2Repository.findAll());
+    public ResponseEntity<List<Ergebnis2vs2DTO>> getAllResults() {
+        return ResponseEntity.ok(ergebnis2vs2Repository.findAll().stream().map(Ergebnis2vs2DTO::new).toList());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Ergebnis2vs2> getResultForId(@PathVariable Long id) {
-        return ergebnis2vs2Repository.findById(id).map(ResponseEntity::ok)
+    public ResponseEntity<Ergebnis2vs2DTO> getResultForId(@PathVariable Long id) {
+        return ergebnis2vs2Repository.findById(id).map(Ergebnis2vs2DTO::new).map(ResponseEntity::ok)
                                      .orElseGet(() -> ResponseEntity.noContent().build());
     }
 }
