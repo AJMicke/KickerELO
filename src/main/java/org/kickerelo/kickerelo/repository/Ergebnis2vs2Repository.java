@@ -15,6 +15,8 @@ public interface Ergebnis2vs2Repository extends JpaRepository<Ergebnis2vs2, Long
     int countByGewinnerVorn(Spieler gewinnerVon);
     int countByVerliererHinten(Spieler verliererHinten);
     int countByVerliererVorn(Spieler verlierVon);
+    int countByGewinnerVornOrGewinnerHinten(Spieler gewinnerVon, Spieler gewinnerHinten);
+    int countByVerliererVornOrVerliererHinten(Spieler verliererVon, Spieler verliererHinten);
 
     int countByGewinnerVornOrGewinnerHintenOrVerliererVornOrVerliererHinten(Spieler gewinnerVon, Spieler gewinnerHinten,
                                                                             Spieler verliererVon, Spieler verliererHinten);

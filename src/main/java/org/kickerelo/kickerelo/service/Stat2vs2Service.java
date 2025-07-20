@@ -30,6 +30,10 @@ public class Stat2vs2Service {
                 wins = ergebnis2vs2Repository.countByGewinnerVorn(s);
                 losses = ergebnis2vs2Repository.countByVerliererVorn(s);
                 break;
+            case BOTH:
+                wins = ergebnis2vs2Repository.countByGewinnerVornOrGewinnerHinten(s, s);
+                losses = ergebnis2vs2Repository.countByVerliererVornOrVerliererHinten(s, s);
+                break;
             default:
                 wins = 0;
                 losses = 0;
