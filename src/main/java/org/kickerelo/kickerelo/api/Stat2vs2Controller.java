@@ -32,6 +32,12 @@ public class Stat2vs2Controller {
         return ResponseEntity.ok(new Stat2vs2DTO(
                 s.getElo2vs2(),
                 ergebnis2vs2Repository.countByGewinnerVornOrGewinnerHintenOrVerliererVornOrVerliererHinten(s, s, s, s),
+                ergebnis2vs2Repository.countByGewinnerVornOrGewinnerHinten(s, s),
+                ergebnis2vs2Repository.countByVerliererVornOrVerliererHinten(s, s),
+                ergebnis2vs2Repository.countByGewinnerVorn(s),
+                ergebnis2vs2Repository.countByGewinnerHinten(s),
+                ergebnis2vs2Repository.countByVerliererVorn(s),
+                ergebnis2vs2Repository.countByVerliererHinten(s),
                 service.getWinrate(s, Position.BOTH),
                 service.getFrontRate(s),
                 service.getWinrate(s, Position.FRONT),
