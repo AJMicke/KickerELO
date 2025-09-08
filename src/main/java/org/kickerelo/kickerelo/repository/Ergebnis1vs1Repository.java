@@ -1,6 +1,7 @@
 package org.kickerelo.kickerelo.repository;
 
 import org.kickerelo.kickerelo.data.Ergebnis1vs1;
+import org.kickerelo.kickerelo.data.Spieler;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,4 +19,7 @@ public interface Ergebnis1vs1Repository extends JpaRepository<Ergebnis1vs1, Long
         (:S1 IS NULL AND :S2 IS NULL)
     """)
     List<Ergebnis1vs1> getFiltered(@Param("S1") String s1, @Param("S2") String s2);
+
+    @Query("select e from Ergebnis1vs1 e where (:s = e.verlierer or :s = e.gewinner) order by e.timestamp desc")
+    List<Ergebnis1vs1> getResultsForSpieler(@Param("s") Spieler s);
 }
