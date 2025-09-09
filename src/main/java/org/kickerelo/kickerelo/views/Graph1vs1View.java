@@ -39,7 +39,7 @@ public class Graph1vs1View extends VerticalLayout {
         List<String> names = new ArrayList<>();
         List<Float> elo = new ArrayList<>();
 
-        List<Spieler> spieler = (onlyActive) ?
+        List<Spieler> spieler = onlyActive ?
                 spielerRepository.getSpielerWith1vs1GamesSince(LocalDateTime.now().minusWeeks(4))
                 : spielerRepository.getSpielerWith1vs1Games();
 
