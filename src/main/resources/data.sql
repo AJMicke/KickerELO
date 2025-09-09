@@ -126,7 +126,7 @@ INSERT INTO ergebnis1vs1 (id, gewinner, verlierer, tore_verlierer, zeitpunkt) VA
     (97, 5, 2, 1, '2025-03-07 10:45:00'),
     (98, 10, 24, 0, '2025-03-08 12:00:00'),
     (99, 14, 12, 5, '2025-03-09 14:15:00'),
-    (100, 23, 7, 3, '2025-03-10 16:30:00');
+    (100, 23, 7, 3, '2025-09-04 16:30:00');
 
 INSERT INTO ergebnis2vs2 (id, gewinner_vorn, gewinner_hinten, verlierer_vorn, verlierer_hinten, tore_verlierer, zeitpunkt) VALUES
     (1, 5, 12, 1, 18, 2, '2024-11-01 10:00:00'),
@@ -228,4 +228,4 @@ INSERT INTO ergebnis2vs2 (id, gewinner_vorn, gewinner_hinten, verlierer_vorn, ve
     (97, 6, 1, 18, 14, 1, '2025-03-07 10:45:00'),
     (98, 19, 23, 7, 25, 0, '2025-03-08 12:00:00'),
     (99, 11, 26, 22, 3, 5, '2025-03-09 14:15:00'),
-    (100, 16, 12, 5, 17, 3, '2025-03-10 16:30:00');
+    (100, 16, 12, 5, 17, 3, '2025-09-07 16:30:00');
