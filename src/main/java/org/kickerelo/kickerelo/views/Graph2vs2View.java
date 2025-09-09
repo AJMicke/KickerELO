@@ -29,7 +29,7 @@ public class Graph2vs2View extends VerticalLayout {
             add(chart);
         });
         checkbox.setLabel("Nur aktive Spieler*innen anzeigen");
-        checkbox.setTooltipText("Nur Spieler*innen anzeigen, die in den letzten 2 Wochen gespielt haben");
+        checkbox.setTooltipText("Nur Spieler*innen anzeigen, die in den letzten 4 Wochen gespielt haben");
         chart = createChart(true);
 
         add(subheading, checkbox, chart);
