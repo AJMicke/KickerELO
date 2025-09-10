@@ -55,6 +55,7 @@ public class KickerAppLayout extends AppLayout {
         SideNav general = new SideNav("Allgemein");
         general.setCollapsible(true);
         general.addItem(new SideNavItem("Spielerliste", PlayerListView.class, VaadinIcon.GROUP.create()),
+                new SideNavItem("Profil", ProfileView.class, VaadinIcon.USER.create()),
                 new SideNavItem("Verwaltung", AdminView.class, VaadinIcon.COG.create()));
         SideNav nav1 = new SideNav("1 vs 1");
         nav1.setCollapsible(true);

@@ -2,6 +2,9 @@ package org.kickerelo.kickerelo.data;
 
 import jakarta.persistence.*;
 
+import javax.annotation.Nullable;
+import java.util.Optional;
+
 @Entity
 @Table(name = "SPIELER")
 public class Spieler {
@@ -21,6 +24,10 @@ public class Spieler {
 
     @Column(name = "ELO_ALT")
     private float elo_alt;
+
+    @OneToOne(optional = true)
+    @JoinColumn(name = "AUTHENTIK_USER", referencedColumnName = "ID", unique = true)
+    private AuthentikUser authentikUser;
 
     public Spieler() {
     }
@@ -63,6 +70,14 @@ public class Spieler {
 
     public void setElo_alt(float elo_alt) {
         this.elo_alt = elo_alt;
+    }
+
+    public Optional<AuthentikUser> getAuthentikUser() {
+        return Optional.ofNullable(authentikUser);
+    }
+
+    public void setAuthentikUser(@Nullable AuthentikUser authentikUser) {
+        this.authentikUser = authentikUser;
     }
 
     @Override
