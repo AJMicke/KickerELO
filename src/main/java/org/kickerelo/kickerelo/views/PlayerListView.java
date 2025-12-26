@@ -24,6 +24,7 @@ public class PlayerListView extends VerticalLayout {
         playerGrid.setItems(players);
         playerGrid.removeColumnByKey("id");
         playerGrid.removeColumnByKey("elo_alt");
+        playerGrid.removeColumnByKey("authentikUser");
         Grid.Column<Spieler> nameColumn = playerGrid.getColumnByKey("name");
         Grid.Column<Spieler> elo1vs1Column = playerGrid.getColumnByKey("elo1vs1");
         Grid.Column<Spieler> elo2vs2Column = playerGrid.getColumnByKey("elo2vs2");
