@@ -35,15 +35,20 @@ public class Ergebnis2vs2 {
     @CreationTimestamp
     private LocalDateTime timestamp;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "SUBMITTER", referencedColumnName = "ID")
+    private AuthentikUser submitter;
+
     public Ergebnis2vs2() {
     }
 
-    public Ergebnis2vs2(Spieler gewinnerVorn, Spieler gewinnerHinten, Spieler verliererVorn, Spieler verliererHinten, short toreVerlierer) {
+    public Ergebnis2vs2(Spieler gewinnerVorn, Spieler gewinnerHinten, Spieler verliererVorn, Spieler verliererHinten, short toreVerlierer, AuthentikUser submitter) {
         this.gewinnerVorn = gewinnerVorn;
         this.gewinnerHinten = gewinnerHinten;
         this.verliererVorn = verliererVorn;
         this.verliererHinten = verliererHinten;
         this.toreVerlierer = toreVerlierer;
+        this.submitter = submitter;
     }
 
     public long getId() {

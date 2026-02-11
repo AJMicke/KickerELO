@@ -1,14 +1,18 @@
 package org.kickerelo.kickerelo.service;
 
-import org.kickerelo.kickerelo.exception.DuplicatePlayerException;
-import org.kickerelo.kickerelo.exception.InvalidDataException;
+import jakarta.transaction.Transactional;
+import org.kickerelo.kickerelo.data.AuthentikUser;
 import org.kickerelo.kickerelo.data.Ergebnis1vs1;
 import org.kickerelo.kickerelo.data.Ergebnis2vs2;
 import org.kickerelo.kickerelo.data.Spieler;
+import org.kickerelo.kickerelo.exception.DuplicatePlayerException;
+import org.kickerelo.kickerelo.exception.InvalidDataException;
 import org.kickerelo.kickerelo.exception.PlayerNameNotSetException;
+import org.kickerelo.kickerelo.repository.AuthentikUserRepository;
 import org.kickerelo.kickerelo.repository.Ergebnis1vs1Repository;
 import org.kickerelo.kickerelo.repository.Ergebnis2vs2Repository;
 import org.kickerelo.kickerelo.repository.SpielerRepository;
+import org.kickerelo.kickerelo.util.AccessControlService;
 import org.kickerelo.kickerelo.util.EloChange1vs1;
 import org.kickerelo.kickerelo.util.EloChange2vs2;
 import org.kickerelo.kickerelo.util.comparator.Ergebnis1vs1TimeComparator;
@@ -29,15 +33,21 @@ public class KickerEloService {
     private final Ergebnis2vs2Repository ergebnis2vs2Repository;
     private final SpielerRepository spielerRepository;
     private final EloCalculationService eloCalculationService;
+    private final AccessControlService accessControlService;
+    private final AuthentikUserRepository userRepository;
 
     public KickerEloService(Ergebnis1vs1Repository ergebnis1vs1Repository,
                             Ergebnis2vs2Repository ergebnis2vs2Repository,
                             SpielerRepository spielerRepository,
-                            EloCalculationService eloCalculationService) {
+                            EloCalculationService eloCalculationService,
+                            AccessControlService accessControlService,
+                            AuthentikUserRepository userRepository) {
         this.ergebnis1vs1Repository = ergebnis1vs1Repository;
         this.ergebnis2vs2Repository = ergebnis2vs2Repository;
         this.spielerRepository = spielerRepository;
         this.eloCalculationService = eloCalculationService;
+        this.accessControlService = accessControlService;
+        this.userRepository = userRepository;
         recalculateAll1vs1();
         recalculateAll2vs2();
     }
@@ -62,6 +72,7 @@ public class KickerEloService {
      * @param verlierer The losing player
      * @param toreVerlierer The number of goals of the loser
      */
+    @Transactional
     public void enterResult1vs1(Spieler gewinner, Spieler verlierer,
                                 short toreVerlierer) {
         // Check if the inputs are valid
@@ -76,8 +87,11 @@ public class KickerEloService {
             throw new InvalidDataException("too many goals");
         }
 
-        Ergebnis1vs1 ergebnis = new Ergebnis1vs1(gewinner, verlierer, toreVerlierer);
+        AuthentikUser currentUser = accessControlService.getCurrentUser().orElseThrow(() -> new RuntimeException("User not authenticated"));
+        Ergebnis1vs1 ergebnis = new Ergebnis1vs1(gewinner, verlierer, toreVerlierer, currentUser);
+        currentUser.addSubmittedResult(ergebnis);
         ergebnis = ergebnis1vs1Repository.save(ergebnis);
+        userRepository.save(currentUser);
 
         EloChange1vs1 change = eloCalculationService.updateElo1vs1(gewinner, verlierer, toreVerlierer);
         EloChangeTracker.put1vs1Result(ergebnis.getId(), change);
@@ -93,6 +107,7 @@ public class KickerEloService {
      * @param verliererHinten losing defensive player
      * @param toreVerlierer Number of goals of the losing team
      */
+    @Transactional
     public void enterResult2vs2(Spieler gewinnerVorn, Spieler gewinnerHinten,
                                 Spieler verliererVorn, Spieler verliererHinten,
                                 short toreVerlierer) {
@@ -115,8 +130,11 @@ public class KickerEloService {
             throw new InvalidDataException("too many loser goals");
         }
 
-        Ergebnis2vs2 ergebnis = new Ergebnis2vs2(gewinnerVorn, gewinnerHinten, verliererVorn, verliererHinten, toreVerlierer);
+        AuthentikUser currentUser = accessControlService.getCurrentUser().orElseThrow(() -> new RuntimeException("User not authenticated"));
+        Ergebnis2vs2 ergebnis = new Ergebnis2vs2(gewinnerVorn, gewinnerHinten, verliererVorn, verliererHinten, toreVerlierer, currentUser);
+        currentUser.addSubmittedResult(ergebnis);
         ergebnis = ergebnis2vs2Repository.save(ergebnis);
+        userRepository.save(currentUser);
 
         EloChange2vs2 change = eloCalculationService.updateElo2vs2(gewinnerVorn, gewinnerHinten, verliererVorn, verliererHinten, toreVerlierer);
         EloChangeTracker.put2vs2Result(ergebnis.getId(), change);
