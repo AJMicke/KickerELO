@@ -1,31 +1,23 @@
 package org.kickerelo.kickerelo.views;
 
+import jakarta.annotation.security.RolesAllowed;
 import org.kickerelo.kickerelo.exception.DuplicatePlayerException;
 import org.kickerelo.kickerelo.exception.InvalidDataException;
 import org.kickerelo.kickerelo.exception.PlayerNameNotSetException;
 import org.kickerelo.kickerelo.service.KickerEloService;
-import org.kickerelo.kickerelo.util.AccessControlService;
 
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.Route;
 
 @Route("admin")
+@RolesAllowed("Kicker Admin")
 public class AdminView extends VerticalLayout {
 
-    public AdminView(KickerEloService service, AccessControlService accessControlService) {
-        // Deny access if user isn't part of the Kicker Admin group
-        if (!accessControlService.userAllowedForRole("Kicker Admin")) {
-            add(new Paragraph("Du bist nicht berechtigt, diese Seite zu sehen."));
-            getUI().ifPresent(ui -> ui.navigate(""));
-            return;
-        }
-
+    public AdminView(KickerEloService service) {
         TextField spielername = new TextField("Spielername");
         spielername.addClassName("bordered");
 

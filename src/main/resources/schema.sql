@@ -6,23 +6,23 @@ CREATE SEQUENCE spieler_seq INCREMENT BY 50 START WITH 1;
 
 CREATE TABLE ergebnis1vs1
 (
-    id             BIGINT   NOT NULL,
-    gewinner       INT      NOT NULL,
-    verlierer      INT      NOT NULL,
-    tore_verlierer SMALLINT NOT NULL,
-    zeitpunkt      datetime NULL,
+    id             BIGINT    NOT NULL,
+    gewinner       INT       NOT NULL,
+    verlierer      INT       NOT NULL,
+    tore_verlierer SMALLINT  NOT NULL,
+    zeitpunkt      TIMESTAMP NULL,
     CONSTRAINT pk_ergebnis1vs1 PRIMARY KEY (id)
 );
 
 CREATE TABLE ergebnis2vs2
 (
-    id               BIGINT   NOT NULL,
-    gewinner_vorn    INT      NOT NULL,
-    gewinner_hinten  INT      NOT NULL,
-    verlierer_vorn   INT      NOT NULL,
-    verlierer_hinten INT      NOT NULL,
-    tore_verlierer   SMALLINT NOT NULL,
-    zeitpunkt        datetime NOT NULL,
+    id               BIGINT    NOT NULL,
+    gewinner_vorn    INT       NOT NULL,
+    gewinner_hinten  INT       NOT NULL,
+    verlierer_vorn   INT       NOT NULL,
+    verlierer_hinten INT       NOT NULL,
+    tore_verlierer   SMALLINT  NOT NULL,
+    zeitpunkt        TIMESTAMP NOT NULL,
     CONSTRAINT pk_ergebnis2vs2 PRIMARY KEY (id)
 );
 

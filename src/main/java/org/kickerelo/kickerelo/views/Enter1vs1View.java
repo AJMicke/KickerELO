@@ -1,17 +1,16 @@
 package org.kickerelo.kickerelo.views;
 
+import jakarta.annotation.security.PermitAll;
 import org.kickerelo.kickerelo.data.Spieler;
 import org.kickerelo.kickerelo.exception.DuplicatePlayerException;
 import org.kickerelo.kickerelo.exception.InvalidDataException;
 import org.kickerelo.kickerelo.exception.NoSuchPlayerException;
 import org.kickerelo.kickerelo.exception.PlayerNameNotSetException;
 import org.kickerelo.kickerelo.service.KickerEloService;
-import org.kickerelo.kickerelo.util.AccessControlService;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -19,16 +18,10 @@ import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.router.Route;
 
 @Route("enter1vs1")
+@PermitAll
 public class Enter1vs1View extends VerticalLayout {
 
-    public Enter1vs1View(KickerEloService eloService, AccessControlService accessControlService) {
-        // Deny access if user isn't part of the Kicker User group
-        if (!accessControlService.userAllowedForRole("Kicker User") && !accessControlService.userAllowedForRole("Kicker Admin")) {
-            add(new Paragraph("Du bist nicht berechtigt, diese Seite zu sehen."));
-            getUI().ifPresent(ui -> ui.navigate(""));
-            return;
-        }
-
+    public Enter1vs1View(KickerEloService eloService) {
         H2 subheading = new H2("1 vs 1 Ergebnis");
 
         ComboBox<Spieler> winnerSelect = new ComboBox<>("Gewinner");

@@ -1,18 +1,28 @@
 package org.kickerelo.kickerelo.config;
 
+import com.vaadin.flow.spring.security.VaadinSecurityConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.oauth2.client.*;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizedClientManager;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
+import org.springframework.security.oauth2.core.oidc.user.OidcUserAuthority;
 import org.springframework.security.web.SecurityFilterChain;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Profile("prod")
+@EnableWebSecurity
 @Configuration
 class SecurityConfiguration {
     @Bean
@@ -36,13 +46,10 @@ class SecurityConfiguration {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/app/admin/**", "/app/admin", "/app/app/admin/**", "/app/app/admin").hasAuthority("Kicker Admin")
-                        .anyRequest().permitAll())
-                .oauth2Login(org.springframework.security.config.Customizer.withDefaults())
-                .logout(logout -> logout.logoutSuccessUrl("/"))
-                .csrf(csrf -> csrf.disable());
+    public SecurityFilterChain filterChain(HttpSecurity http) {
+        http.with(VaadinSecurityConfigurer.vaadin(),
+                configurer -> configurer.oauth2LoginPage("/oauth2/authorization/oidc"));
+        http.logout(logout -> logout.logoutSuccessUrl("/app/"));
 
         return http.build();
     }
@@ -52,5 +59,28 @@ class SecurityConfiguration {
             JdbcTemplate jdbcTemplate,
             ClientRegistrationRepository clientRegistrationRepository) {
         return new JdbcOAuth2AuthorizedClientService(jdbcTemplate, clientRegistrationRepository);
+    }
+
+    @Bean
+    public GrantedAuthoritiesMapper userAuthoritiesMapper() {
+        return authorities -> {
+            Set<GrantedAuthority> mappedAuthorities = new HashSet<>();
+
+            authorities.forEach(authority -> {
+                if (authority instanceof OidcUserAuthority oidcAuth) {
+                    var roles = oidcAuth.getIdToken().getClaimAsStringList("groups");
+
+                    if (roles != null) {
+                        roles.forEach(role -> {
+                            // Add the ROLE_ prefix so @RolesAllowed works
+                            mappedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + role));
+                        });
+                    }
+                }
+                mappedAuthorities.add(authority);
+            });
+
+            return mappedAuthorities;
+        };
     }
 }

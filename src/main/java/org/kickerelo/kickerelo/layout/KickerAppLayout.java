@@ -2,6 +2,7 @@ package org.kickerelo.kickerelo.layout;
 
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
@@ -12,21 +13,21 @@ import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.dom.Style;
 import com.vaadin.flow.router.Layout;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
+import com.vaadin.flow.spring.security.AuthenticationContext;
 import org.kickerelo.kickerelo.util.AccessControlService;
 import org.kickerelo.kickerelo.views.*;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-
-
 @Layout
 @JsModule("./prefers-color-scheme.js")
+@AnonymousAllowed
 public class KickerAppLayout extends AppLayout {
     AccessControlService accessControlService;
+    AuthenticationContext authenticationContext;
 
-    public KickerAppLayout(AccessControlService accessControlService) {
+    public KickerAppLayout(AccessControlService accessControlService, AuthenticationContext authenticationContext) {
         this.accessControlService = accessControlService;
+        this.authenticationContext = authenticationContext;
         DrawerToggle drawerToggle = new DrawerToggle();
 
         H1 title = new H1("Kicker-ELO");
@@ -36,8 +37,7 @@ public class KickerAppLayout extends AppLayout {
 
         // Add login/logout button
         if (accessControlService.userAllowedForRole("")) {
-            Anchor logoutLink = new Anchor("/logout", "Logout");
-
+            Button logoutLink = new Button("Logout", e -> this.authenticationContext.logout());
             logoutLink.getElement().getStyle()
                     .set("margin-left", "auto")
                     .set("margin-right", "10px")
