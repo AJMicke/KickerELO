@@ -4,6 +4,7 @@ import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 import org.kickerelo.kickerelo.data.Spieler;
 import org.kickerelo.kickerelo.repository.SpielerRepository;
 
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Route("graph2vs2")
+@AnonymousAllowed
 public class Graph2vs2View extends VerticalLayout {
     private final SpielerRepository spielerRepository;
     private Chart chart;

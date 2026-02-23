@@ -2,6 +2,7 @@ package org.kickerelo.kickerelo.views;
 
 import java.util.List;
 
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 import org.kickerelo.kickerelo.data.Spieler;
 import org.kickerelo.kickerelo.service.KickerEloService;
 
@@ -13,6 +14,7 @@ import com.vaadin.flow.data.provider.SortDirection;
 import com.vaadin.flow.router.Route;
 
 @Route("/")
+@AnonymousAllowed
 public class PlayerListView extends VerticalLayout {
     public PlayerListView(KickerEloService eloService) {
         setSizeFull();

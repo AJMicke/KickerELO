@@ -4,6 +4,8 @@
    Visit https://vaadin.com/docs/styling/application-theme/ for more information.
 */
 
+@import url("@vaadin/lumo-styles/lumo.css");
+
 /* Example: CSS class name to center align the content . */
 .centered-content {
   margin: 0 auto;

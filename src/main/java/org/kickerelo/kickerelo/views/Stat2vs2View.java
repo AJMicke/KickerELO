@@ -1,5 +1,6 @@
 package org.kickerelo.kickerelo.views;
 
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 import org.kickerelo.kickerelo.data.Spieler;
 import org.kickerelo.kickerelo.repository.Ergebnis2vs2Repository;
 import org.kickerelo.kickerelo.service.KickerEloService;
@@ -16,6 +17,7 @@ import com.vaadin.flow.component.progressbar.ProgressBarVariant;
 import com.vaadin.flow.router.Route;
 
 @Route("stat2vs2")
+@AnonymousAllowed
 public class Stat2vs2View extends VerticalLayout {
     Stat2vs2Service stat2vs2Service;
     KickerEloService kickerEloService;

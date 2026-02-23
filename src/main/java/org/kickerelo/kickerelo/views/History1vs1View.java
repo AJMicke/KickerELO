@@ -2,6 +2,7 @@ package org.kickerelo.kickerelo.views;
 
 import java.util.List;
 
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 import org.kickerelo.kickerelo.data.Ergebnis1vs1;
 import org.kickerelo.kickerelo.repository.Ergebnis1vs1Repository;
 
@@ -20,6 +21,7 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 
 @Route("history1vs1")
+@AnonymousAllowed
 public class History1vs1View extends HistoryView {
 
     private final Ergebnis1vs1Repository repo;
